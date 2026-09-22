@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F6F5F3">
+<script>(function(){try{var t=localStorage.getItem("sk_theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}})()</script>
+<title>Sakuta | Pesan dari meja</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Young+Serif&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="sakuta.css">
+<style>
+body{background:var(--paper)}
+.app{max-width:520px;margin:0 auto;min-height:100vh;min-height:100dvh;background:var(--paper);position:relative;padding-bottom:120px}
+@media(min-width:560px){body{background:var(--stone)}.app{box-shadow:0 0 0 1px var(--line)}}
+
+.demo-bar{display:flex;align-items:center;gap:8px;padding:8px 18px;background:var(--oat);color:var(--cocoa-2);font-size:12.5px;line-height:1.35}
+.demo-bar .ic{flex:none}
+.demo-bar a{margin-left:auto;font-weight:600;white-space:nowrap;color:var(--cocoa-2)}
+.embed .demo-bar a{display:none}
+
+.top{position:sticky;top:0;z-index:20;height:60px;padding:0 14px 0 18px;display:flex;align-items:center;justify-content:space-between;background:color-mix(in srgb,var(--paper) 94%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.top-r{display:flex;align-items:center;gap:8px}
+.pill{display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 13px;border-radius:99px;background:var(--card);border:1px solid var(--line);font-size:13.5px;font-weight:600;transition:border-color .15s}
+.pill:hover{border-color:var(--latte)}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--sage)}
+.pill.warn i{background:#C69A45}
+.pill.wait i{background:var(--cocoa)}
+
+.hero{padding:14px 18px 6px}
+.hero h1{font-family:var(--serif);font-weight:400;font-size:30px;line-height:1.14;letter-spacing:-.01em}
+.hero p{margin-top:8px;color:var(--ink-2);max-width:34ch}
+.search{display:flex;align-items:center;gap:10px;margin:16px 18px 0;height:46px;padding:0 14px;border-radius:14px;background:var(--card);border:1px solid var(--line);color:var(--ink-3)}
+.search:focus-within{border-color:var(--latte);box-shadow:0 0 0 4px rgba(194,166,146,.22)}
+.search input{flex:1;border:0;outline:0;background:none;min-width:0;color:var(--ink)}
+.cats{position:sticky;top:60px;z-index:15;display:flex;gap:8px;padding:12px 18px;overflow-x:auto;scrollbar-width:none;background:linear-gradient(var(--paper) 78%,color-mix(in srgb,var(--paper) 0%,transparent))}
+.cats::-webkit-scrollbar{display:none}
+.cat{flex:none;height:36px;padding:0 15px;border-radius:99px;font-size:14px;font-weight:600;color:var(--ink-2);background:transparent;transition:background .15s,color .15s}
+.cat:hover{background:var(--stone)}
+.cat.on{background:var(--ink);color:var(--paper)}
+
+#list{padding:0 18px}
+.sec{font-family:var(--serif);font-weight:400;font-size:20px;margin:18px 0 2px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.item{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line-2);cursor:pointer}
+.item .tile{width:64px;height:64px}
+.item .tile .ic{width:28px;height:28px}
+.item h3{font-size:15.5px;font-weight:600;letter-spacing:-.005em;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.item p{font-size:13px;color:var(--ink-2);line-height:1.35;margin-top:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.item .price{font-weight:600;font-size:14px;margin-top:6px;display:flex;gap:6px 14px;flex-wrap:wrap}
+.item .price span+span{color:var(--ink-2);font-weight:500}
+.item .price small{font-weight:500;color:var(--ink-3);font-size:12.5px;margin-right:4px}
+.tag{font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--oat);color:var(--cocoa-2)}
+.add{min-width:38px;height:38px;padding:0 10px;border-radius:99px;background:var(--cocoa);color:var(--on-cocoa);display:grid;place-items:center;font-weight:700;font-variant-numeric:tabular-nums;transition:background .15s}
+.add:hover{background:var(--cocoa-2)}
+.item.off{cursor:default}
+.item.off .tile,.item.off>div:nth-child(2){opacity:.5}
+.soldout{font-size:12.5px;font-weight:600;color:var(--rose);background:var(--rose-t);padding:5px 10px;border-radius:99px}
+.foot-note{text-align:center;color:var(--ink-3);font-size:12.5px;padding:26px 20px 0}
+
+.cartbar{position:fixed;left:0;right:0;bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;pointer-events:none;z-index:30}
+.cartbar button{pointer-events:auto;width:calc(100% - 32px);max-width:488px;height:58px;border-radius:20px;background:var(--cocoa);color:var(--on-cocoa);display:flex;align-items:center;justify-content:space-between;padding:0 20px 0 12px;box-shadow:0 16px 32px -12px rgba(80,56,42,.6);animation:pop .25s ease-out}
+.cartbar .n{width:34px;height:34px;border-radius:12px;background:color-mix(in srgb,var(--on-cocoa) 16%,transparent);display:grid;place-items:center;font-weight:700}
+.cartbar .l{display:flex;align-items:center;gap:12px;font-weight:600}
+.cartbar b{font-variant-numeric:tabular-nums}
+
+/* sheet isi */
+.row{display:flex;align-items:center;gap:12px}
+.row.sb{justify-content:space-between}
+.grp{border:0;padding:0;margin:18px 0 0;min-width:0}
+.grp legend{font-size:13.5px;font-weight:600;margin-bottom:9px;padding:0}
+.choice em{font-style:normal;color:inherit;opacity:.7;font-size:12.5px}
+.sheet .field{margin-top:18px}
+.cline{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:14px 0;border-bottom:1px solid var(--line-2)}
+.cline b{font-weight:600}
+.cline small{display:block;color:var(--ink-2);font-size:12.5px;line-height:1.35}
+.cline .pr{font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.cline .warn{color:var(--rose);font-weight:600}
+.sum{margin-top:14px;display:grid;gap:7px;font-size:14px}
+.sum div{display:flex;justify-content:space-between;color:var(--ink-2)}
+.sum .t{color:var(--ink);font-weight:700;font-size:16px;padding-top:10px;border-top:1px solid var(--line)}
+.pay-opt{display:flex;gap:12px;align-items:flex-start;padding:13px 14px;border:1px solid var(--line);border-radius:16px;cursor:pointer;position:relative;background:var(--card);transition:border-color .15s,background .15s}
+.pay-opt input{position:absolute;opacity:0}
+.pay-opt .mi{width:38px;height:38px;border-radius:12px;background:var(--oat);color:var(--cocoa);display:grid;place-items:center;flex:none}
+.pay-opt b{display:block;font-weight:600;font-size:14.5px}
+.pay-opt small{color:var(--ink-2);font-size:12.5px;line-height:1.35}
+.pay-opt:has(input:checked){border-color:var(--cocoa);background:var(--tint);box-shadow:0 0 0 1px var(--cocoa) inset}
+.pay-opt:has(input:focus-visible){outline:2px solid var(--cocoa);outline-offset:2px}
+.tgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+.tgrid button{height:56px;border-radius:16px;border:1px solid var(--line);background:var(--card);font-family:var(--serif);font-size:21px;transition:.15s}
+.tgrid button:hover{border-color:var(--cocoa);background:var(--oat)}
+.tgrid button.on{background:var(--cocoa);border-color:var(--cocoa);color:var(--on-cocoa)}
+
+/* Snap (simulasi Midtrans) */
+.snap{max-width:440px}
+.snap-head{display:flex;justify-content:space-between;align-items:center;padding:14px 14px 0 20px}
+.snap-brand{display:flex;gap:10px;align-items:center}
+.snap-brand b{font-family:var(--serif);font-weight:400;font-size:19px;display:block;line-height:1.1}
+.snap-brand small{display:block;color:var(--ink-3);font-size:12px;line-height:1.2}
+.snap-amt{padding:12px 20px 16px;border-bottom:1px solid var(--line-2)}
+.snap-amt>span{font-size:13px;color:var(--ink-2)}
+.snap-amt>b{display:block;font-family:var(--serif);font-weight:400;font-size:32px;line-height:1.15;margin:2px 0 9px}
+.snap-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--ink-2)}
+.snap-body{padding:16px 20px 24px}
+.snap-body h4{font-size:14px;font-weight:600}
+.methods{display:grid;gap:8px;margin-top:12px}
+.methods button{width:100%;display:flex;align-items:center;gap:14px;text-align:left;padding:12px 14px;border:1px solid var(--line);border-radius:16px;background:var(--card);transition:border-color .15s,background .15s}
+.methods button:hover{border-color:var(--latte);background:var(--tint)}
+.methods .mi{width:42px;height:42px;border-radius:13px;background:var(--oat);color:var(--cocoa);display:grid;place-items:center;flex:none}
+.methods b{display:block;font-weight:600;font-size:15px}
+.methods small{color:var(--ink-2);font-size:12.5px}
+.methods .go{margin-left:auto;color:var(--ink-3)}
+.snap-note{margin-top:14px;font-size:12.5px;color:var(--ink-3);line-height:1.4}
+.backl{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:var(--ink-2);margin-bottom:10px}
+.qrbox{margin:14px auto 4px;width:212px;padding:12px;border-radius:20px;border:1px solid var(--line);background:#fff}
+.qrbox svg{width:100%;height:auto}
+.center{text-align:center}
+.steps{margin-top:12px;display:grid;gap:8px;font-size:13.5px;color:var(--ink-2);counter-reset:s}
+.steps li{display:grid;grid-template-columns:22px 1fr;gap:10px;counter-increment:s}
+.steps li::before{content:counter(s);width:22px;height:22px;border-radius:50%;background:var(--oat);color:var(--cocoa-2);font-size:12px;font-weight:700;display:grid;place-items:center}
+.va{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--paper);border:1px solid var(--line);padding:14px 16px;border-radius:16px;margin-top:12px}
+.va b{font-size:20px;letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.va small{display:block;color:var(--ink-2);font-size:12.5px}
+.sim{margin-top:18px;border:1.5px dashed var(--latte);border-radius:16px;padding:14px;background:var(--tint)}
+.sim-t{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--cocoa-2)}
+.sim p{font-size:12.5px;color:var(--ink-2);margin:4px 0 12px;line-height:1.4}
+.sim .row{flex-wrap:wrap}
+.cardf{display:grid;gap:12px;margin-top:12px}
+.cardf .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.state{padding:46px 20px 50px;text-align:center;display:grid;justify-items:center;gap:10px}
+.state h4{font-family:var(--serif);font-weight:400;font-size:22px}
+.state p{color:var(--ink-2);max-width:30ch;font-size:14px}
+.okc{width:64px;height:64px;border-radius:50%;background:var(--sage-t);color:var(--sage);display:grid;place-items:center;animation:pop .35s ease-out}
+.okc .ic{width:30px;height:30px;stroke-width:2}
+.xc{background:var(--rose-t);color:var(--rose)}
+
+/* Halaman status pesanan */
+.ohero{margin:8px 18px 0;padding:22px 20px;border-radius:24px;background:var(--card);border:1px solid var(--line)}
+.ohero h1{font-family:var(--serif);font-weight:400;font-size:28px;line-height:1.15;letter-spacing:-.01em}
+.ohero .lead{color:var(--ink-2);margin-top:8px}
+.omet{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.bigcode{margin-top:16px;padding:14px;border-radius:16px;background:var(--paper);text-align:center;font-family:var(--serif);font-size:30px;letter-spacing:.02em}
+.tl{margin-top:22px;display:grid}
+.tl li{display:grid;grid-template-columns:28px 1fr auto;gap:12px;position:relative;padding-bottom:20px}
+.tl li:last-child{padding-bottom:0}
+.tl li::before{content:"";position:absolute;left:13px;top:28px;bottom:-2px;width:2px;background:var(--line)}
+.tl li.done::before{background:var(--cocoa)}
+.tl li:last-child::before{display:none}
+.dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);background:var(--card);display:grid;place-items:center;color:var(--on-cocoa)}
+.dot .ic{width:15px;height:15px;stroke-width:2.4}
+.done .dot{background:var(--cocoa);border-color:var(--cocoa)}
+.now .dot{border-color:var(--cocoa);box-shadow:0 0 0 5px rgba(111,85,70,.14);animation:breathe 2.6s ease-in-out infinite}
+.now .dot::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--cocoa)}
+@keyframes breathe{50%{box-shadow:0 0 0 9px rgba(111,85,70,.05)}}
+.tl b{display:block;font-weight:600;line-height:1.3;padding-top:3px}
+.tl small{color:var(--ink-2);font-size:13px}
+.tl li:not(.done):not(.now) b{color:var(--ink-3)}
+.tl time{font-size:13px;color:var(--ink-2);padding-top:4px;font-variant-numeric:tabular-nums}
+.actions{display:grid;gap:10px;margin-top:20px}
+.card{margin:14px 18px 0;padding:18px 20px;border-radius:22px;background:var(--card);border:1px solid var(--line)}
+.card h2{font-family:var(--serif);font-weight:400;font-size:18px;margin-bottom:4px}
+.rate{display:flex;gap:6px;margin-top:14px}
+.rate button{color:var(--line);transition:color .15s,transform .1s}
+.rate button.on,.rate button:hover{color:#C9A15A}
+.rate button .ic{width:30px;height:30px}
+.rate button.on .ic{fill:currentColor}
+.mt{margin-top:14px}
+.linkbtn{display:inline-flex;align-items:center;gap:6px;font-weight:600;color:var(--cocoa-2);font-size:14px;padding:6px 0}
+@media(prefers-reduced-motion:reduce){.now .dot{animation:none}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="demo-bar">
+    <svg class="ic sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8h.01"/></svg>
+    <span>Mode demo. Pembayaran disimulasikan, tidak ada uang sungguhan.</span>
+    <a href="index.html">Halaman demo</a>
+  </div>
+  <header class="top" id="top"></header>
+  <main id="view"></main>
+  <div class="cartbar" id="cartbar"></div>
+</div>
+<div id="sheet-root"></div>
+
+<script src="qrcode.js"></script>
+<script src="sakuta-core.js"></script>
+<script>
+(function () {
+  'use strict';
+  const S = window.Sakuta, esc = S.esc, rp = S.rp, ic = S.icon;
+  const $ = (s, r) => (r || document).querySelector(s);
+  const qs = new URLSearchParams(location.search);
+  if (qs.get('embed')) document.documentElement.classList.add('embed');
+
+  /* ---------- state lokal pelanggan ---------- */
+  let table = parseInt(qs.get('meja'), 10) || parseInt(sessionStorage.getItem('sk_table') || '0', 10) || 0;
+  if (table) sessionStorage.setItem('sk_table', table);
+  let cart = []; try { cart = JSON.parse(sessionStorage.getItem('sk_cart') || '[]'); } catch (e) { }
+  let cat = 'Semua', q = '', custName = sessionStorage.getItem('sk_name') || '', payMode = 'online';
+  let timers = [];
+  const view = $('#view');
+  const lastTok = () => localStorage.getItem('sk_last');
+  const clearTimers = () => { timers.forEach(clearInterval); timers = []; };
+
+  const saveCart = () => { sessionStorage.setItem('sk_cart', JSON.stringify(cart)); drawCartbar(); };
+  const keyOf = l => l.id + '|' + JSON.stringify(l.sel || {}) + '|' + (l.note || '');
+  const isOrderView = () => /^#\/order\//.test(location.hash);
+  const menuOf = id => S.state().menu.find(m => m.id === id);
+  function priced() {
+    return cart.map(l => {
+      const m = menuOf(l.id); if (!m) return null;
+      const pl = S.priceLine(m, l.sel);
+      return Object.assign({}, l, { name: m.name, unit: pl.unit, labels: pl.labels, off: m.on === false });
+    }).filter(Boolean);
+  }
+  const cartQty = () => cart.reduce((a, l) => a + l.qty, 0);
+
+  /* ---------- sheet helper ---------- */
+  function openSheet(html, opt) {
+    opt = opt || {};
+    const ov = document.createElement('div'); ov.className = 'overlay' + (opt.mid ? ' mid' : '');
+    const sh = document.createElement('div'); sh.className = 'sheet' + (opt.cls ? ' ' + opt.cls : '');
+    sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.tabIndex = -1;
+    sh.innerHTML = html; ov.appendChild(sh); $('#sheet-root').appendChild(ov);
+    document.body.style.overflow = 'hidden';
+    const api = {
+      el: ov, sheet: sh,
+      close() {
+        if (!ov.isConnected) return; ov.remove(); document.removeEventListener('keydown', onKey);
+        if (!$('#sheet-root').children.length) document.body.style.overflow = '';
+        opt.onClose && opt.onClose();
+      }
+    };
+    function onKey(e) { if (e.key === 'Escape' && !opt.force && ov === $('#sheet-root').lastElementChild) api.close(); }
+    document.addEventListener('keydown', onKey);
+    ov.addEventListener('mousedown', e => { if (e.target === ov && !opt.force) api.close(); });
+    sh.addEventListener('click', e => { if (e.target.closest('[data-close]')) api.close(); });
+    sh.focus({ preventScroll: true });
+    return api;
+  }
+  const closeAll = () => { $('#sheet-root').innerHTML = ''; document.body.style.overflow = ''; };
+
+  /* ---------- header ---------- */
+  function drawTop() {
+    const tok = lastTok(), o = tok && S.byToken(tok);
+    let mine = '';
+    if (o) {
+      const k = o.status === 'pending' ? 'warn' : (o.status === 'delivered' || o.status === 'cancelled' || o.status === 'expired') ? '' : 'wait';
+      mine = '<a class="pill ' + k + '" href="#/order/' + o.token + '"><i></i>Pesananku</a>';
+    }
+    $('#top').innerHTML =
+      '<span class="logo">' + S.logoMark() + '<span>sakuta</span></span>' +
+      '<div class="top-r">' + mine + '<button class="pill" id="tbtn" aria-label="Ganti nomor meja">' + ic('table', 'sm') + (table ? 'Meja ' + table : 'Pilih meja') + '</button>' + S.themeBtn() + '</div>';
+  }
+
+  /* ---------- halaman menu ---------- */
+  function renderMenu() {
+    clearTimers();
+    document.title = 'Sakuta | Pesan dari meja';
+    view.innerHTML =
+      '<section class="hero"><h1>Mau minum apa hari ini?</h1><p>Pilih menu, bayar dari ponsel, dan pesananmu diantar ke ' + (table ? 'Meja ' + table : 'mejamu') + '.</p></section>' +
+      '<label class="search">' + ic('search', 'sm') + '<input id="q" type="search" placeholder="Cari menu" autocomplete="off" aria-label="Cari menu" value="' + esc(q) + '"></label>' +
+      '<nav class="cats" id="cats" aria-label="Kategori"></nav><div id="list"></div>' +
+      '<p class="foot-note">Harga belum termasuk service dan pajak. Rinciannya tampil sebelum kamu membayar.</p>';
+    drawCats(); drawList(); drawCartbar();
+  }
+  function drawCats() {
+    const el = $('#cats'); if (!el) return;
+    el.innerHTML = ['Semua'].concat(S.CATS).map(c => '<button class="cat' + (c === cat ? ' on' : '') + '" data-cat="' + c + '">' + c + '</button>').join('');
+  }
+  function itemRow(m) {
+    const inCart = cart.filter(l => l.id === m.id), n = inCart.reduce((a, l) => a + l.qty, 0), hasOpts = (m.opts || []).length > 0;
+    let act = '';
+    if (m.on === false) act = '<span class="soldout">Habis</span>';
+    else if (!hasOpts && n) act = '<div class="stepper" data-stop><button data-dec="' + m.id + '" aria-label="Kurangi">' + ic('minus', 'sm') + '</button><b>' + n + '</b><button data-inc="' + m.id + '" aria-label="Tambah">' + ic('plus', 'sm') + '</button></div>';
+    else act = '<button class="add" data-add="' + m.id + '" aria-label="Tambah ' + esc(m.name) + '">' + (n ? n : ic('plus', 'sm')) + '</button>';
+    return '<article class="item' + (m.on === false ? ' off' : '') + '" data-id="' + m.id + '"><div class="tile ' + S.CAT_TILE[m.cat] + '">' + ic(m.ic) + '</div><div><h3>' + esc(m.name) + (m.tag ? '<span class="tag">' + m.tag + '</span>' : '') + '</h3><p>' + esc(m.desc) + '</p><div class="price num">' + S.priceTags(m).map(t => '<span>' + (t.l ? '<small>' + t.l + '</small>' : '') + S.kfmt(t.v) + '</span>').join('') + '</div></div><div>' + act + '</div></article>';
+  }
+  function drawList() {
+    const el = $('#list'); if (!el) return;
+    const menu = S.state().menu, needle = q.trim().toLowerCase();
+    let html = '';
+    if (needle) {
+      const r = menu.filter(m => (m.name + ' ' + m.desc).toLowerCase().includes(needle));
+      html = r.length ? '<h2 class="sec">Hasil pencarian</h2>' + r.map(itemRow).join('') : '<div class="empty">' + ic('search') + '<h3>Menu tidak ditemukan</h3><p>Coba kata kunci lain, misalnya kopi atau matcha.</p></div>';
+    } else {
+      (cat === 'Semua' ? S.CATS : [cat]).forEach(c => {
+        const r = menu.filter(m => m.cat === c); if (r.length) html += '<section><h2 class="sec">' + c + '</h2>' + r.map(itemRow).join('') + '</section>';
+      });
+    }
+    el.innerHTML = html;
+  }
+  function drawCartbar() {
+    const el = $('#cartbar'); if (!el) return;
+    if (isOrderView() || !cart.length) { el.innerHTML = ''; return; }
+    const t = S.totals(priced(), S.state().settings);
+    el.innerHTML = '<button id="opencart"><span class="l"><span class="n">' + cartQty() + '</span>Lihat pesanan</span><b>' + rp(t.total) + '</b></button>';
+  }
+
+  function addSimple(id, d) {
+    const i = cart.findIndex(l => l.id === id && !Object.keys(l.sel || {}).length && !l.note);
+    if (i >= 0) { cart[i].qty += d; if (cart[i].qty <= 0) cart.splice(i, 1); }
+    else if (d > 0) cart.push({ id, qty: 1, sel: {}, note: '' });
+    saveCart(); drawList();
+  }
+
+  /* ---------- sheet: detail item ---------- */
+  function openItem(id) {
+    const m = menuOf(id); if (!m || m.on === false) return;
+    let qty = 1;
+    const groups = (m.opts || []).map((g, gi) =>
+      '<fieldset class="grp"><legend>' + g.g + (g.multi ? ' <span class="faint" style="font-weight:500">(boleh lebih dari satu)</span>' : '') + '</legend><div class="choices">' +
+      g.c.map((c, ci) => '<label class="choice"><input type="' + (g.multi ? 'checkbox' : 'radio') + '" name="g' + gi + '" value="' + esc(c.l) + '"' + (!g.multi && ci === 0 ? ' checked' : '') + '><span>' + esc(c.l) + (c.p ? ' <em>+' + rp(c.p) + '</em>' : '') + '</span></label>').join('') +
+      '</div></fieldset>').join('');
+    const sh = openSheet(
+      '<div class="grab"></div><div class="sheet-head"><h3>' + esc(m.name) + '</h3><button class="icon-btn" data-close aria-label="Tutup">' + ic('x') + '</button></div>' +
+      '<div class="sheet-body"><p class="muted">' + esc(m.desc) + '</p>' + groups +
+      '<label class="field"><span>Catatan untuk barista atau dapur</span><textarea class="input" id="note" maxlength="120" placeholder="Contoh: es batu sedikit"></textarea></label></div>' +
+      '<div class="sheet-foot"><div class="row sb"><div class="stepper"><button id="qm" aria-label="Kurangi">' + ic('minus', 'sm') + '</button><b id="qv">1</b><button id="qp" aria-label="Tambah">' + ic('plus', 'sm') + '</button></div><button class="btn btn-primary btn-lg" id="ok" style="flex:1">Tambah <span class="num" id="tot"></span></button></div></div>', { mid: true });
+    const root = sh.sheet;
+    const readSel = () => { const sel = {}; (m.opts || []).forEach((g, gi) => { const els = root.querySelectorAll('input[name=g' + gi + ']:checked'); sel[g.g] = g.multi ? Array.from(els).map(e => e.value) : (els[0] ? els[0].value : g.c[0].l); }); return sel; };
+    const upd = () => { $('#qv', root).textContent = qty; $('#tot', root).textContent = rp(S.priceLine(m, readSel()).unit * qty); };
+    root.addEventListener('change', upd);
+    $('#qm', root).onclick = () => { qty = Math.max(1, qty - 1); upd(); };
+    $('#qp', root).onclick = () => { qty = Math.min(20, qty + 1); upd(); };
+    $('#ok', root).onclick = () => {
+      const l = { id: m.id, qty, sel: readSel(), note: $('#note', root).value.trim() };
+      const i = cart.findIndex(x => keyOf(x) === keyOf(l));
+      if (i >= 0) cart[i].qty += qty; else cart.push(l);
+      saveCart(); drawList(); sh.close(); S.toast(m.name + ' masuk ke pesanan', { icon: 'check' });
+    };
+    upd();
+  }
+
+  /* ---------- sheet: pilih meja ---------- */
+  function openTablePicker(after, force) {
+    const n = S.state().settings.tables;
+    let btns = ''; for (let i = 1; i <= n; i++) btns += '<button data-t="' + i + '" class="' + (i === table ? 'on' : '') + '">' + i + '</button>';
+    const sh = openSheet(
+      '<div class="grab"></div><div class="sheet-head"><h3>Kamu duduk di meja berapa?</h3>' + (force ? '' : '<button class="icon-btn" data-close aria-label="Tutup">' + ic('x') + '</button>') + '</div>' +
+      '<div class="sheet-body"><p class="muted">Di kafe sungguhan, nomor meja terbaca otomatis saat kamu scan QR di meja. Untuk demo ini, pilih sendiri.</p><div class="tgrid">' + btns + '</div></div>', { mid: true, force });
+    sh.sheet.addEventListener('click', e => {
+      const b = e.target.closest('[data-t]'); if (!b) return;
+      table = +b.dataset.t; sessionStorage.setItem('sk_table', table); sh.close(); drawTop(); route(); after && after();
+    });
+  }
+
+  /* ---------- sheet: keranjang ---------- */
+  function openCart() {
+    const set = () => S.state().settings;
+    const sh = openSheet('', { mid: true });
+    const root = sh.sheet;
+    function draw() {
+      const ls = priced(), t = S.totals(ls, set()), anyOff = ls.some(l => l.off);
+      if (!ls.length) { sh.close(); return; }
+      if (!set().cash) payMode = 'online';
+      root.innerHTML =
+        '<div class="grab"></div><div class="sheet-head"><h3>Pesananmu</h3><button class="icon-btn" data-close aria-label="Tutup">' + ic('x') + '</button></div>' +
+        '<div class="sheet-body">' +
+        '<div class="row sb"><span class="badge b-cocoa">' + ic('table', 'sm') + (table ? 'Meja ' + table : 'Belum pilih meja') + '</span><button class="linkbtn" data-tbl>' + (table ? 'Ganti meja' : 'Pilih meja') + '</button></div>' +
+        ls.map((l, i) => '<div class="cline"><div><b>' + esc(l.name) + '</b>' + (l.off ? '<small class="warn">Menu ini sudah habis. Hapus dari pesanan.</small>' : '') + (l.labels.length ? '<small>' + esc(l.labels.join(', ')) + '</small>' : '') + (l.note ? '<small>Catatan: ' + esc(l.note) + '</small>' : '') + '</div><div class="pr">' + rp(l.unit * l.qty) + '</div>' +
+          '<div class="stepper" style="justify-self:start"><button data-dec="' + i + '" aria-label="Kurangi">' + ic('minus', 'sm') + '</button><b>' + l.qty + '</b><button data-inc="' + i + '" aria-label="Tambah">' + ic('plus', 'sm') + '</button></div><span></span></div>').join('') +
+        '<label class="field"><span>Nama pemesan (boleh dikosongkan)</span><input class="input" id="cname" maxlength="30" placeholder="Supaya barista mudah memanggil" value="' + esc(custName) + '"></label>' +
+        '<div class="field"><span>Cara bayar</span>' +
+        '<label class="pay-opt"><input type="radio" name="pm" value="online"' + (payMode === 'online' ? ' checked' : '') + '><span class="mi">' + ic('wallet') + '</span><span><b>Bayar online</b><small>QRIS, e-wallet, virtual account, atau kartu lewat Midtrans. Kasir langsung tahu saat lunas.</small></span></label>' +
+        (set().cash ? '<label class="pay-opt"><input type="radio" name="pm" value="cash"' + (payMode === 'cash' ? ' checked' : '') + '><span class="mi">' + ic('cash') + '</span><span><b>Bayar di kasir</b><small>Kirim pesanan dulu, lalu sebutkan kode pesanan ke kasir untuk membayar tunai.</small></span></label>' : '') + '</div>' +
+        '<div class="sum num"><div><span>Subtotal</span><span>' + rp(t.sub) + '</span></div><div><span>Service ' + set().service + '%</span><span>' + rp(t.service) + '</span></div><div><span>Pajak PB1 ' + set().tax + '%</span><span>' + rp(t.tax) + '</span></div><div class="t"><span>Total</span><span>' + rp(t.total) + '</span></div></div></div>' +
+        '<div class="sheet-foot"><button class="btn btn-primary btn-lg btn-block" id="go"' + (anyOff ? ' disabled' : '') + '>' + (payMode === 'cash' ? 'Kirim pesanan' : 'Bayar ' + rp(t.total)) + '</button></div>';
+    }
+    root.addEventListener('click', e => {
+      const d = e.target.closest('[data-dec]'), i = e.target.closest('[data-inc]');
+      if (d) { const k = +d.dataset.dec; cart[k].qty--; if (cart[k].qty <= 0) cart.splice(k, 1); saveCart(); drawList(); draw(); }
+      if (i) { const k = +i.dataset.inc; cart[k].qty = Math.min(20, cart[k].qty + 1); saveCart(); drawList(); draw(); }
+      if (e.target.closest('[data-tbl]')) openTablePicker(draw);
+      if (e.target.closest('#go')) checkout(sh);
+    });
+    root.addEventListener('change', e => { if (e.target.name === 'pm') { payMode = e.target.value; draw(); } });
+    root.addEventListener('input', e => { if (e.target.id === 'cname') { custName = e.target.value; sessionStorage.setItem('sk_name', custName); } });
+    draw();
+  }
+
+  function checkout(sh) {
+    if (!table) { openTablePicker(() => checkout(sh)); return; }
+    const lines = cart.map(l => ({ id: l.id, qty: l.qty, sel: l.sel, note: l.note }));
+    const o = S.createOrder({ table, name: custName.trim(), lines, mode: payMode });
+    if (!o) { S.toast('Ada menu yang habis. Periksa pesananmu.', { icon: 'info' }); return; }
+    cart = []; saveCart(); localStorage.setItem('sk_last', o.token);
+    closeAll(); location.hash = '#/order/' + o.token; drawTop();
+    if (o.mode === 'online') setTimeout(() => openSnap(o.token), 280);
+    else S.toast('Pesanan terkirim. Tunjukkan kode ' + o.code + ' ke kasir.', { icon: 'check', ms: 4200 });
+  }
+
+  /* ---------- simulasi Midtrans Snap ---------- */
+  function openSnap(token) {
+    const o = S.byToken(token); if (!o || o.status !== 'pending' || o.mode !== 'online') return;
+    let screen = 'methods', method = null, bank = null, tick = null;
+    const sh = openSheet('', { mid: true, cls: 'snap', force: true, onClose() { clearInterval(tick); } });
+    const root = sh.sheet;
+    const delay = ms => new Promise(r => setTimeout(r, ms));
+    const head = () =>
+      '<div class="snap-head"><div class="snap-brand">' + S.logoMark() + '<div><b>sakuta</b><small>Pembayaran aman</small></div></div><button class="icon-btn" data-close aria-label="Tutup">' + ic('x') + '</button></div>' +
+      '<div class="snap-amt"><span>Total pembayaran</span><b class="num">' + rp(o.total) + '</b><div class="snap-meta"><span>Pesanan ' + o.code + '</span><span class="badge b-amber"><i></i>Bayar dalam <span id="snapcd" class="num">' + S.mmss(o.expiresAt - Date.now()) + '</span></span></div></div>';
+    const back = to => '<button class="backl" data-go="' + to + '">' + ic('back', 'sm') + 'Ganti metode</button>';
+    const sim = () => '<div class="sim"><div class="sim-t">' + ic('play', 'sm') + '<b>Simulator sandbox</b></div><p>Pada transaksi nyata, langkah ini dilakukan pelanggan di aplikasi bank atau e-wallet. Di sini, tekan tombol untuk meniru hasilnya.</p><div class="row"><button class="btn btn-primary btn-sm" data-sim="settlement">Simulasikan bayar berhasil</button><button class="btn btn-quiet btn-sm" data-sim="deny">Simulasikan gagal</button></div></div>';
+    const mrow = (m, i, b, s) => '<li><button data-m="' + m + '"><span class="mi">' + ic(i) + '</span><span><b>' + b + '</b><small>' + s + '</small></span><span class="go">' + ic('chevR', 'sm') + '</span></button></li>';
+
+    function body() {
+      switch (screen) {
+        case 'methods':
+          return '<div class="snap-body"><h4>Pilih metode pembayaran</h4><ul class="methods">' +
+            mrow('qris', 'qr', 'QRIS', 'Semua e-wallet dan mobile banking') + mrow('gopay', 'wallet', 'GoPay', 'Bayar lewat aplikasi Gojek') + mrow('shopeepay', 'wallet', 'ShopeePay', 'Bayar lewat aplikasi Shopee') +
+            mrow('va', 'bank', 'Virtual account', 'BCA, BNI, BRI, Mandiri') + mrow('card', 'card', 'Kartu kredit atau debit', 'Visa, Mastercard, JCB') +
+            '</ul><p class="snap-note">Tampilan ini meniru Midtrans Snap untuk keperluan demo. Tidak ada transaksi sungguhan.</p></div>';
+        case 'va':
+          return '<div class="snap-body">' + back('methods') + '<h4>Pilih bank</h4><ul class="methods">' +
+            ['bca:BCA', 'bni:BNI', 'bri:BRI', 'mandiri:Mandiri'].map(x => { const [k, n] = x.split(':'); return mrow('va_' + k, 'bank', 'Bank ' + n, 'Virtual account ' + n); }).join('') + '</ul></div>';
+        case 'qris':
+          return '<div class="snap-body">' + back('methods') + '<h4 class="center">Scan untuk membayar</h4><div class="qrbox">' + S.qrSvg('SAKUTA-DEMO-QRIS|' + o.code + '|' + o.total, { margin: 0, label: 'QRIS simulasi' }) + '</div><ol class="steps"><li>Buka aplikasi e-wallet atau mobile banking.</li><li>Pilih Scan atau QRIS, lalu arahkan ke kode di atas.</li><li>Periksa nominal dan konfirmasi pembayaran.</li></ol>' + sim() + '</div>';
+        case 'gopay': case 'shopeepay': {
+          const n = method === 'gopay' ? 'GoPay' : 'ShopeePay';
+          return '<div class="snap-body">' + back('methods') + '<h4>Bayar dengan ' + n + '</h4><ol class="steps"><li>Aplikasi ' + n + ' terbuka otomatis di ponselmu.</li><li>Periksa nominal pembayaran ke Sakuta.</li><li>Masukkan PIN untuk konfirmasi.</li></ol>' + sim() + '</div>';
+        }
+        case 'va_bca': case 'va_bni': case 'va_bri': case 'va_mandiri': {
+          const va = S.vaFor(method, o.code), bn = method.slice(3).toUpperCase().replace('MANDIRI', 'Mandiri');
+          return '<div class="snap-body">' + back('va') + '<h4>Transfer ke virtual account ' + bn + '</h4><div class="va"><div><small>Nomor virtual account</small><b>' + va + '</b></div><button class="btn btn-quiet btn-sm" data-copy="' + va + '">' + ic('copy', 'sm') + 'Salin</button></div><ol class="steps"><li>Buka ATM atau mobile banking ' + bn + '.</li><li>Pilih Transfer, lalu Virtual Account.</li><li>Masukkan nomor di atas dan konfirmasi ' + rp(o.total) + '.</li></ol>' + sim() + '</div>';
+        }
+        case 'card':
+          return '<div class="snap-body">' + back('methods') + '<h4>Data kartu</h4><div class="cardf"><label class="field"><span>Nomor kartu</span><input class="input num" value="4811 1111 1111 1114" inputmode="numeric" aria-label="Nomor kartu"></label><div class="two"><label class="field"><span>Berlaku hingga</span><input class="input num" value="02/28" aria-label="Masa berlaku"></label><label class="field"><span>CVV</span><input class="input num" value="123" aria-label="CVV"></label></div><button class="btn btn-primary btn-lg btn-block" data-go="otp">Bayar ' + rp(o.total) + '</button></div><p class="snap-note">Kartu uji sandbox sudah terisi otomatis.</p></div>';
+        case 'otp':
+          return '<div class="snap-body"><h4>Verifikasi 3D Secure</h4><p class="muted" style="margin-top:6px;font-size:14px">Bank penerbit mengirim kode OTP ke ponselmu. Pada sandbox, kodenya 112233.</p><label class="field" style="margin-top:14px"><span>Kode OTP</span><input class="input num" value="112233" inputmode="numeric" aria-label="Kode OTP"></label><button class="btn btn-primary btn-lg btn-block" style="margin-top:14px" data-sim="settlement">Konfirmasi</button></div>';
+        case 'processing':
+          return '<div class="state"><div class="spin"></div><h4>Memverifikasi pembayaran</h4><p>Menunggu konfirmasi dari Midtrans. Jangan tutup halaman ini.</p></div>';
+        case 'success':
+          return '<div class="state"><div class="okc">' + ic('check') + '</div><h4>Pembayaran berhasil</h4><p>' + rp(o.total) + ' lewat ' + esc(S.METHOD[method] || 'Midtrans') + '. Pesananmu sudah masuk ke kasir.</p></div>';
+        case 'failed':
+          return '<div class="state"><div class="okc xc">' + ic('x') + '</div><h4>Pembayaran ditolak</h4><p>Transaksi tidak berhasil. Kamu bisa mencoba metode lain, tidak ada dana yang terpotong.</p><button class="btn btn-primary" data-go="methods" style="margin-top:6px">Coba metode lain</button></div>';
+      }
+    }
+    function render() { root.innerHTML = head() + body(); }
+
+    async function settle(status) {
+      const m = method;
+      screen = 'processing'; render();
+      await Promise.all([S.notify(o.code, status, m), delay(1300)]);
+      if (status === 'settlement') { screen = 'success'; render(); await delay(1700); sh.close(); S.toast('Pembayaran diterima. Kasir sudah mendapat pesananmu.', { icon: 'check', ms: 4200 }); }
+      else { screen = 'failed'; render(); }
+    }
+    root.addEventListener('click', e => {
+      const t = e.target;
+      const m = t.closest('[data-m]'), g = t.closest('[data-go]'), s = t.closest('[data-sim]'), c = t.closest('[data-copy]');
+      if (m) { method = m.dataset.m; screen = method === 'va' ? 'va' : method; render(); }
+      else if (g) { screen = g.dataset.go; render(); }
+      else if (s) settle(s.dataset.sim);
+      else if (c) { try { navigator.clipboard.writeText(c.dataset.copy); } catch (er) { } S.toast('Nomor virtual account disalin', { icon: 'copy' }); }
+    });
+    tick = setInterval(() => {
+      const el = $('#snapcd', root), left = o.expiresAt - Date.now();
+      if (el) el.textContent = S.mmss(left);
+      if (left <= 0) { clearInterval(tick); sh.close(); S.sweep(); S.toast('Waktu pembayaran habis.', { icon: 'clock' }); }
+    }, 1000);
+    render();
+  }
+
+  /* ---------- halaman status pesanan ---------- */
+  const STEPS = [['paid', 'Pembayaran diterima', 'Kasir sudah menerima pesananmu.'], ['preparing', 'Sedang disiapkan', 'Barista dan dapur sedang mengerjakannya.'], ['ready', 'Siap diantar', 'Pesanan selesai dan dibawa ke mejamu.'], ['delivered', 'Sampai di meja', 'Selamat menikmati.']];
+  let lastSeen = {};
+  function renderOrder(token, opts) {
+    clearTimers();
+    const o = S.byToken(token);
+    if (!o) {
+      view.innerHTML = '<div class="empty" style="margin-top:40px">' + ic('receipt') + '<h3>Pesanan tidak ditemukan</h3><p>Kode ini tidak ada di data demo. Mungkin data demo sudah direset.</p><a class="btn btn-primary" style="margin-top:16px" href="#/">Kembali ke menu</a></div>';
+      drawCartbar(); return;
+    }
+    document.title = o.code + ' | Sakuta';
+    const prev = lastSeen[o.token]; lastSeen[o.token] = o.status;
+    if (prev && prev !== o.status && opts && opts.live) {
+      const msg = { paid: 'Pembayaran diterima', preparing: 'Pesananmu sedang disiapkan', ready: 'Pesananmu siap diantar', delivered: 'Pesananmu sudah sampai di meja', expired: 'Waktu pembayaran habis', cancelled: 'Pesanan dibatalkan' }[o.status];
+      if (msg) S.toast(msg, { icon: 'bell' });
+    }
+    const idx = STEPS.findIndex(s => s[0] === o.status);
+    const when = k => { const e = o.tl.find(x => x.s === k); return e ? S.timeStr(e.at) : ''; };
+    let title, lead, extra = '', badge;
+    switch (o.status) {
+      case 'pending':
+        badge = '<span class="badge b-amber"><i></i>Menunggu pembayaran</span>';
+        if (o.mode === 'cash') { title = 'Bayar di kasir'; lead = 'Sebutkan kode pesanan ini ke kasir. Pesanan mulai dibuat setelah pembayaran diterima.'; extra = '<div class="bigcode num">' + o.code + '</div><div class="actions"><button class="btn btn-quiet" data-cancel="' + o.code + '">Batalkan pesanan</button></div>'; }
+        else { title = 'Menunggu pembayaran'; lead = 'Selesaikan pembayaran dalam <b class="num" id="cd">' + S.mmss(o.expiresAt - Date.now()) + '</b>. Setelah lunas, pesanan langsung masuk ke kasir.'; extra = '<div class="actions"><button class="btn btn-primary btn-lg" data-pay="' + o.token + '">Lanjutkan pembayaran</button><button class="btn btn-quiet" data-cancel="' + o.code + '">Batalkan pesanan</button></div>'; }
+        break;
+      case 'paid': badge = '<span class="badge b-sage"><i></i>Lunas</span>'; title = 'Pesanan diterima'; lead = 'Kasir sudah menerima pesananmu dan akan segera menyiapkannya.'; break;
+      case 'preparing': badge = '<span class="badge b-cocoa"><i></i>Diproses</span>'; title = 'Sedang disiapkan'; lead = 'Perkiraan 8 sampai 12 menit. Kamu tidak perlu menunggu di kasir.'; break;
+      case 'ready': badge = '<span class="badge b-slate"><i></i>Siap</span>'; title = 'Siap diantar'; lead = 'Pesananmu sudah selesai dan sedang dibawa ke Meja ' + o.table + '.'; break;
+      case 'delivered': badge = '<span class="badge b-sage"><i></i>Selesai</span>'; title = 'Selamat menikmati'; lead = 'Pesanan sudah diantar ke Meja ' + o.table + '. Bagaimana rasanya?';
+        extra = '<div class="rate" role="group" aria-label="Beri nilai">' + [1, 2, 3, 4, 5].map(n => '<button data-rate="' + n + '" class="' + (o.rating >= n ? 'on' : '') + '" aria-label="' + n + ' bintang">' + ic('star') + '</button>').join('') + '</div>' + (o.rating ? '<p class="muted mt">Terima kasih atas penilaianmu.</p>' : ''); break;
+      case 'expired': badge = '<span class="badge b-rose"><i></i>Kedaluwarsa</span>'; title = 'Waktu pembayaran habis'; lead = 'Pesanan ini otomatis dibatalkan karena belum dibayar. Kamu bisa membuat pesanan baru kapan saja.'; extra = '<div class="actions"><a class="btn btn-primary" href="#/">Pesan lagi</a></div>'; break;
+      default: badge = '<span class="badge b-rose"><i></i>Dibatalkan</span>'; title = 'Pesanan dibatalkan'; lead = o.payStatus === 'refund' ? 'Pembayaranmu dikembalikan ke metode awal (simulasi refund).' : 'Pesanan ini dibatalkan.'; extra = '<div class="actions"><a class="btn btn-primary" href="#/">Pesan lagi</a></div>';
+    }
+    const showTL = ['paid', 'preparing', 'ready', 'delivered'].includes(o.status) || (o.status === 'pending' && o.mode === 'cash');
+    const tl = showTL ? '<ol class="tl">' + STEPS.map((s, i) => {
+      const cls = i < idx || (o.status === 'delivered') ? 'done' : i === idx ? 'now' : '';
+      return '<li class="' + cls + '"><span class="dot">' + (cls === 'done' ? ic('check') : '') + '</span><div><b>' + s[1] + '</b>' + (cls === 'now' ? '<small>' + s[2] + '</small>' : '') + '</div><time>' + when(s[0]) + '</time></li>';
+    }).join('') + '</ol>' : '';
+    const lines = o.lines.map(l => '<div class="cline"><div><b>' + l.qty + '× ' + esc(l.name) + '</b>' + (l.opts.length ? '<small>' + esc(l.opts.join(', ')) + '</small>' : '') + (l.note ? '<small>Catatan: ' + esc(l.note) + '</small>' : '') + '</div><div class="pr">' + rp(l.unit * l.qty) + '</div></div>').join('');
+    view.innerHTML =
+      '<div style="padding:6px 18px 0"><a class="linkbtn" href="#/">' + ic('back', 'sm') + 'Menu</a></div>' +
+      '<section class="ohero"><div class="omet">' + badge + '<span class="badge">' + ic('table', 'sm') + 'Meja ' + o.table + '</span><span class="badge num">' + o.code + '</span></div><h1>' + title + '</h1><p class="lead">' + lead + '</p>' + extra + tl + '</section>' +
+      '<section class="card"><h2>Rincian pesanan</h2>' + lines + '<div class="sum num"><div><span>Subtotal</span><span>' + rp(o.sub) + '</span></div><div><span>Service</span><span>' + rp(o.service) + '</span></div><div><span>Pajak PB1</span><span>' + rp(o.tax) + '</span></div><div class="t"><span>Total</span><span>' + rp(o.total) + '</span></div></div></section>' +
+      (o.payStatus === 'settlement' || o.payStatus === 'cash' ? '<section class="card"><h2>Pembayaran</h2><div class="sum"><div><span>Metode</span><span>' + esc(S.METHOD[o.method] || '-') + '</span></div><div><span>Waktu</span><span class="num">' + (o.paidAt ? S.timeStr(o.paidAt) : '-') + '</span></div></div></section>' : '') +
+      '<div style="padding:18px"><a class="btn btn-line btn-block" href="#/">Pesan lagi</a></div>';
+    drawCartbar();
+    if (o.status === 'pending' && o.mode === 'online') {
+      timers.push(setInterval(() => { const el = $('#cd'); const left = o.expiresAt - Date.now(); if (el) el.textContent = S.mmss(left); if (left <= 0) S.sweep(); }, 1000));
+    }
+  }
+
+  /* ---------- router + events ---------- */
+  function route() {
+    const m = location.hash.match(/^#\/order\/(\w+)/);
+    if (m) renderOrder(m[1]); else renderMenu();
+    drawTop(); window.scrollTo(0, 0);
+  }
+  window.addEventListener('hashchange', route);
+
+  document.addEventListener('click', e => {
+    const t = e.target;
+    if (t.closest('#tbtn')) return openTablePicker();
+    if (t.closest('#opencart')) return openCart();
+    const c = t.closest('[data-cat]'); if (c) { cat = c.dataset.cat; q = ''; const i = $('#q'); if (i) i.value = ''; drawCats(); drawList(); return; }
+    const inc = t.closest('#list [data-inc]'); if (inc) return addSimple(inc.dataset.inc, 1);
+    const dec = t.closest('#list [data-dec]'); if (dec) return addSimple(dec.dataset.dec, -1);
+    const add = t.closest('#list [data-add]'); if (add) { const m = menuOf(add.dataset.add); return (m.opts || []).length ? openItem(m.id) : (addSimple(m.id, 1), S.toast(m.name + ' masuk ke pesanan', { icon: 'check' })); }
+    const it = t.closest('#list .item'); if (it && !t.closest('[data-stop]')) return openItem(it.dataset.id);
+    const pay = t.closest('[data-pay]'); if (pay) return openSnap(pay.dataset.pay);
+    const can = t.closest('[data-cancel]'); if (can) { S.cancelOrder(can.dataset.cancel); return; }
+    const rt = t.closest('[data-rate]'); if (rt) { const m = location.hash.match(/^#\/order\/(\w+)/); const o = m && S.byToken(m[1]); if (o) S.rate(o.code, +rt.dataset.rate); }
+  });
+  document.addEventListener('input', e => { if (e.target.id === 'q') { q = e.target.value; drawList(); } });
+
+  S.on(() => {
+    drawTop();
+    const m = location.hash.match(/^#\/order\/(\w+)/);
+    if (m) renderOrderLive(m[1]); else { drawList(); drawCartbar(); }
+  });
+  function renderOrderLive(tok) { const y = window.scrollY; renderOrder(tok, { live: true }); window.scrollTo(0, y); }
+  setInterval(S.sweep, 8000);
+
+  /* mulai */
+  route();
+  if (!table && !isOrderView()) openTablePicker(null, true);
+  else if (isOrderView()) { const m = location.hash.match(/^#\/order\/(\w+)/); const o = S.byToken(m[1]); if (o) lastSeen[o.token] = o.status; }
+})();
+</script>
+</body>
+</html>

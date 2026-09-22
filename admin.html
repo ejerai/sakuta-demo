@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F6F5F3">
+<title>Sakuta | Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Young+Serif&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="sakuta.css">
+<script>(function(){try{var t=localStorage.getItem("sk_theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}})()</script>
+<style>
+body{background:var(--paper)}
+.demo-bar{display:flex;align-items:center;gap:8px;padding:8px 18px;background:var(--oat);color:var(--cocoa-2);font-size:12.5px;line-height:1.35}
+.demo-bar .ic{flex:none}
+.demo-bar a{margin-left:auto;font-weight:600;white-space:nowrap;color:var(--cocoa-2)}
+
+/* ---------- login ---------- */
+.login{min-height:calc(100vh - 40px);min-height:calc(100dvh - 40px);display:grid;place-items:center;padding:24px}
+.login-card{width:100%;max-width:400px;background:var(--card);border:1px solid var(--line);border-radius:26px;padding:30px 26px}
+.login-card>.logo{justify-content:center;display:flex;margin-bottom:4px}
+.login-card h1{font-family:var(--serif);font-weight:400;font-size:23px;text-align:center;margin-top:10px}
+.login-card>p{color:var(--ink-2);font-size:13.5px;text-align:center;margin-top:6px}
+.roles2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}
+.role{border:1px solid var(--line);border-radius:16px;padding:15px 12px;text-align:left;background:var(--card);transition:border-color .15s,background .15s}
+.role .mi{width:36px;height:36px;border-radius:11px;background:var(--oat);color:var(--cocoa);display:grid;place-items:center}
+.role b{display:block;font-size:14px;margin-top:10px}
+.role span{display:block;color:var(--ink-2);font-size:12px;margin-top:2px;line-height:1.4}
+.role.on{border-color:var(--cocoa);background:var(--tint);box-shadow:0 0 0 1px var(--cocoa) inset}
+.login-card .field{margin-top:16px}
+.demo-note{margin-top:18px;padding:12px 13px;border-radius:14px;background:var(--oat);color:var(--cocoa-2);font-size:12.5px;line-height:1.5;display:flex;gap:9px}
+
+/* ---------- shell ---------- */
+.shell{display:grid;grid-template-columns:230px 1fr;min-height:100vh;min-height:100dvh}
+.side{border-right:1px solid var(--line);padding:18px 14px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;height:100dvh}
+.side>.logo{padding:6px 8px 18px}
+.side nav{display:grid;gap:2px;flex:1}
+.side nav button{display:flex;align-items:center;gap:11px;height:42px;padding:0 12px;border-radius:12px;font-weight:600;font-size:13.8px;color:var(--ink-2);text-align:left;position:relative}
+.side nav button:hover{background:var(--stone)}
+.side nav button.on{background:var(--cocoa);color:var(--on-cocoa)}
+.side nav button .cnt{margin-left:auto;background:var(--rose-t);color:var(--rose);font-size:11px;font-weight:700;min-width:19px;height:19px;border-radius:99px;display:grid;place-items:center;padding:0 5px}
+.side nav button.on .cnt{background:rgba(255,255,255,.22);color:var(--on-cocoa)}
+.side .divider{height:1px;background:var(--line);margin:10px 4px}
+.side .who{display:flex;align-items:center;gap:10px;padding:10px 8px}
+.side .who .av{width:34px;height:34px;border-radius:50%;background:var(--oat);color:var(--cocoa);display:grid;place-items:center;font-weight:700;font-size:13px;flex:none}
+.side .who b{display:block;font-size:13.3px}
+.side .who span{display:block;color:var(--ink-3);font-size:11.5px}
+.side .foot{display:flex;gap:6px}
+
+.main{min-width:0}
+.topbar{position:sticky;top:0;z-index:20;height:64px;padding:0 26px;display:flex;align-items:center;gap:12px;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar h1{font-family:var(--serif);font-weight:400;font-size:19px}
+.topbar .sp{flex:1}
+.mobnav{display:none}
+.view{padding:22px 26px 60px}
+
+/* mobile bottom nav */
+@media(max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .side{display:none}
+  .mobnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--card);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));justify-content:space-around}
+  .mobnav button{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:600;color:var(--ink-3);padding:6px 8px;border-radius:12px;position:relative}
+  .mobnav button.on{color:var(--cocoa)}
+  .mobnav .cnt{position:absolute;top:2px;right:2px;background:var(--rose);color:#fff;font-size:9px;font-weight:700;min-width:15px;height:15px;border-radius:99px;display:grid;place-items:center}
+  .view{padding:18px 16px 90px}
+  .topbar{padding:0 16px}
+}
+
+/* ---------- ringkasan ---------- */
+.rangebar{display:flex;gap:8px;margin-bottom:18px}
+.rangebar button{height:34px;padding:0 14px;border-radius:99px;font-size:13px;font-weight:600;color:var(--ink-2);background:var(--stone)}
+.rangebar button.on{background:var(--ink);color:var(--paper)}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px}
+.stat span{color:var(--ink-2);font-size:12.5px;font-weight:600}
+.stat b{display:block;font-family:var(--serif);font-weight:400;font-size:26px;margin-top:8px}
+.stat i{display:block;color:var(--ink-3);font-size:12px;margin-top:4px;font-style:normal}
+.panels{display:grid;grid-template-columns:1.5fr 1fr;gap:14px;margin-top:14px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px}
+.panel h2{font-weight:600;font-size:14.5px;margin-bottom:14px}
+.bars{display:flex;align-items:flex-end;gap:4px;height:140px}
+.bars .b{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.bars .b i{width:100%;max-width:22px;background:var(--oat);border-radius:5px 5px 2px 2px;transition:height .3s}
+.bars .b.now i{background:var(--cocoa)}
+.bars .b small{font-size:9.5px;color:var(--ink-3);white-space:nowrap}
+.toplist{display:grid;gap:10px}
+.toplist .tr{display:flex;align-items:center;gap:10px;font-size:13.3px}
+.toplist .tr b{flex:1;font-weight:500}
+.toplist .tr span{color:var(--ink-2);font-variant-numeric:tabular-nums}
+.paylist{display:grid;gap:9px;margin-top:6px}
+.paylist .pr{display:flex;justify-content:space-between;font-size:13.3px}
+.paylist .track{height:6px;border-radius:99px;background:var(--stone);margin-top:5px;overflow:hidden}
+.paylist .track i{display:block;height:100%;background:var(--cocoa);border-radius:99px}
+
+/* ---------- kanban ---------- */
+.ktools{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.ktools .search{flex:1;min-width:180px}
+.kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.kcol h2{display:flex;align-items:center;gap:8px;font-weight:600;font-size:13.8px;margin-bottom:10px;padding:0 2px}
+.kcol h2 .cnt{background:var(--stone);color:var(--ink-2);font-size:11.5px;font-weight:700;min-width:20px;height:20px;border-radius:99px;display:grid;place-items:center;padding:0 6px}
+.klist{display:grid;gap:10px;min-height:60px}
+.kcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px 14px;cursor:pointer;transition:border-color .15s}
+.kcard:hover{border-color:var(--latte)}
+.kcard .kr{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.kcard b.code{font-variant-numeric:tabular-nums;font-weight:700;font-size:13.5px}
+.kcard .tbl{font-size:11.5px;font-weight:700;color:var(--cocoa-2);background:var(--oat);padding:2px 8px;border-radius:99px}
+.kcard .items{color:var(--ink-2);font-size:12.5px;margin-top:6px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.kcard .kf{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.kcard .kf b{font-weight:700;font-size:13px}
+.kcard .kf small{color:var(--ink-3);font-size:11.5px}
+.kcard .adv{margin-top:10px;width:100%}
+.kempty{color:var(--ink-3);font-size:12.5px;text-align:center;padding:18px 8px;border:1.5px dashed var(--line);border-radius:14px}
+@media(max-width:1080px){.kanban{grid-template-columns:1fr}}
+
+/* ---------- meja ---------- */
+.tgrid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:12px}
+.tcard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 14px;text-align:left}
+.tcard b{display:block;font-family:var(--serif);font-weight:400;font-size:22px}
+.tcard span{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:11.5px;font-weight:600;color:var(--sage)}
+.tcard span i{width:6px;height:6px;border-radius:50%;background:currentColor}
+.tcard.busy span{color:var(--amber)}
+
+/* ---------- menu admin ---------- */
+.mtoolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:10px;flex-wrap:wrap}
+.mrow{display:flex;align-items:center;gap:14px;padding:13px 4px;border-bottom:1px solid var(--line-2)}
+.mrow .tile{width:44px;height:44px}
+.mrow .tile .ic{width:20px;height:20px}
+.mrow .mid{flex:1;min-width:0}
+.mrow b{font-size:14px;font-weight:600}
+.mrow .pr{color:var(--ink-2);font-size:12px;margin-top:2px}
+.mrow .mact{display:flex;align-items:center;gap:10px}
+.mcatlbl{font-weight:600;font-size:13.5px;color:var(--ink-2);margin:20px 0 4px}
+.mcatlbl:first-child{margin-top:0}
+
+/* ---------- webhook log ---------- */
+.wlog{display:grid;gap:10px}
+.wrow{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px 15px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
+.wrow .wc{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;flex:none}
+.wrow.ok .wc{background:var(--sage-t);color:var(--sage)}
+.wrow.dup .wc{background:var(--stone);color:var(--ink-2)}
+.wrow.bad .wc{background:var(--rose-t);color:var(--rose)}
+.wrow b{font-size:13.5px;font-weight:600;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.wrow p{color:var(--ink-2);font-size:12.3px;margin-top:3px;line-height:1.4}
+.wrow time{color:var(--ink-3);font-size:11.5px;white-space:nowrap}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;background:var(--oat);color:var(--cocoa-2);padding:2px 7px;border-radius:7px}
+
+/* ---------- pengaturan ---------- */
+.setgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:760px}
+.setcard{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px}
+.setcard h2{font-weight:600;font-size:14.5px;margin-bottom:4px}
+.setcard p.d{color:var(--ink-2);font-size:12.5px;margin-bottom:14px;line-height:1.4}
+.setrow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line-2)}
+.setrow:last-child{border:0}
+.setrow b{font-size:13.5px;font-weight:600;display:block}
+.setrow small{color:var(--ink-2);font-size:12px}
+.numw{width:78px}
+.keybox{margin-top:8px;display:flex;align-items:center;gap:8px}
+@media(max-width:640px){.setgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="demo-bar">
+  <svg class="ic sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8h.01"/></svg>
+  <span>Mode demo. Login tanpa kredensial sungguhan, data tersimpan di browser ini saja.</span>
+  <a href="index.html">Halaman demo</a>
+</div>
+<div id="root"></div>
+<div id="sheet-root"></div>
+
+<script src="qrcode.js"></script>
+<script src="sakuta-core.js"></script>
+<script>
+(function () {
+  'use strict';
+  var S = window.Sakuta, esc = S.esc, rp = S.rp, ic = S.icon;
+  var root = document.getElementById('root');
+  var $ = function (sel, r) { return (r || document).querySelector(sel); };
+  var $$ = function (sel, r) { return Array.prototype.slice.call((r || document).querySelectorAll(sel)); };
+
+  /* ---------------- sheet helper (sama seperti menu.html) ---------------- */
+  function openSheet(html, opt) {
+    opt = opt || {};
+    var ov = document.createElement('div'); ov.className = 'overlay' + (opt.mid ? ' mid' : '');
+    var sh = document.createElement('div'); sh.className = 'sheet' + (opt.cls ? ' ' + opt.cls : '');
+    sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.tabIndex = -1;
+    sh.innerHTML = html; ov.appendChild(sh); document.getElementById('sheet-root').appendChild(ov);
+    document.body.style.overflow = 'hidden';
+    var api = {
+      el: ov, sheet: sh,
+      close: function () {
+        if (!ov.isConnected) return; ov.remove(); document.removeEventListener('keydown', onKey);
+        if (!document.getElementById('sheet-root').children.length) document.body.style.overflow = '';
+      }
+    };
+    function onKey(e) { if (e.key === 'Escape') api.close(); }
+    document.addEventListener('keydown', onKey);
+    ov.addEventListener('mousedown', function (e) { if (e.target === ov) api.close(); });
+    sh.addEventListener('click', function (e) { if (e.target.closest('[data-close]')) api.close(); });
+    sh.focus({ preventScroll: true });
+    return api;
+  }
+
+  /* ---------------- sesi peran ---------------- */
+  var role = sessionStorage.getItem('sk_role') || '';
+  var staff = sessionStorage.getItem('sk_staff') || '';
+  var ROLES = {
+    kasir: { label: 'Kasir', mi: 'monitor', desc: 'Kelola pesanan masuk dan status meja.', nav: ['pesanan', 'meja'] },
+    admin: { label: 'Admin', mi: 'shield', desc: 'Akses penuh: ringkasan, menu, dan pengaturan.', nav: ['ringkasan', 'pesanan', 'meja', 'menu', 'webhook', 'pengaturan'] }
+  };
+  var NAVITEM = {
+    ringkasan: ['chart', 'Ringkasan'], pesanan: ['receipt', 'Pesanan'], meja: ['qr', 'Meja & QR'],
+    menu: ['grid', 'Menu'], webhook: ['bolt', 'Log webhook'], pengaturan: ['settings', 'Pengaturan']
+  };
+
+  function renderLogin() {
+    document.title = 'Masuk | Sakuta';
+    var picked = 'admin';
+    root.innerHTML =
+      '<div class="login"><div class="login-card">' + S.logo() +
+      '<h1>Masuk ke Sakuta POS</h1><p>Pilih perananmu untuk membuka dashboard demo.</p>' +
+      '<div class="roles2" id="roles">' + Object.keys(ROLES).map(function (k) {
+        var r = ROLES[k];
+        return '<button class="role' + (k === picked ? ' on' : '') + '" data-role="' + k + '"><span class="mi">' + ic(r.mi) + '</span><b>' + r.label + '</b><span>' + r.desc + '</span></button>';
+      }).join('') + '</div>' +
+      '<label class="field"><span>Nama (opsional)</span><input class="input" id="nm" placeholder="Misalnya Sinta" maxlength="24"></label>' +
+      '<label class="field"><span>PIN demo</span><input class="input num" id="pin" value="1234" inputmode="numeric" maxlength="6"></label>' +
+      '<button class="btn btn-primary btn-lg btn-block" style="margin-top:18px" id="go">Masuk sebagai ' + ROLES[picked].label + '</button>' +
+      '<div class="demo-note">' + ic('info', 'sm') + '<span>Ini bukan sistem login sungguhan. PIN tidak diperiksa ke server mana pun &mdash; cukup untuk menunjukkan alur ke client.</span></div>' +
+      '</div></div>';
+    var box = $('#roles'), btn = $('#go');
+    box.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-role]'); if (!b) return;
+      picked = b.dataset.role; $$('.role', box).forEach(function (x) { x.classList.toggle('on', x.dataset.role === picked); });
+      btn.textContent = 'Masuk sebagai ' + ROLES[picked].label;
+    });
+    btn.onclick = function () {
+      role = picked; staff = $('#nm').value.trim();
+      sessionStorage.setItem('sk_role', role); sessionStorage.setItem('sk_staff', staff);
+      S.unlockAudio(); boot();
+    };
+  }
+
+  /* ---------------- shell setelah login ---------------- */
+  var route = 'pesanan';
+  var unsub = null;
+
+  function logout() { sessionStorage.removeItem('sk_role'); sessionStorage.removeItem('sk_staff'); if (unsub) unsub(); renderLogin(); }
+
+  function renderShell() {
+    var r = ROLES[role]; if (!r) { renderLogin(); return; }
+    if (r.nav.indexOf(route) < 0) route = r.nav[0];
+    root.innerHTML =
+      '<div class="shell">' +
+      '<aside class="side"><span class="logo">' + S.logoMark() + '<span>sakuta</span></span>' +
+      '<nav id="nav">' + r.nav.map(function (k) { return navBtn(k); }).join('') + '</nav>' +
+      '<div class="divider"></div>' +
+      '<div class="who"><span class="av">' + (staff ? staff[0].toUpperCase() : r.label[0]) + '</span><div><b>' + esc(staff || r.label) + '</b><span>' + r.label + '</span></div></div>' +
+      '<div class="foot"><button class="btn btn-quiet btn-sm" style="flex:1" id="lg1">' + ic('logout', 'sm') + 'Keluar</button><button class="icon-btn" data-theme-toggle title="Mode terang atau gelap"></button></div>' +
+      '</aside>' +
+      '<div class="main"><header class="topbar"><h1 id="vtitle"></h1><span class="sp"></span>' + S.themeBtn() + '<button class="icon-btn" id="lg2" title="Keluar">' + ic('logout') + '</button></header>' +
+      '<div class="view" id="view"></div></div>' +
+      '</div>' +
+      '<nav class="mobnav" id="mnav">' + r.nav.map(function (k) { return mobBtn(k); }).join('') + '</nav>';
+    $('#lg1').onclick = logout; $('#lg2').onclick = logout;
+    draw();
+    if (unsub) unsub();
+    unsub = S.on(function () { draw(true); });
+  }
+  function navBtn(k) {
+    var it = NAVITEM[k], badge = k === 'pesanan' ? '<span class="cnt" id="badge-nav"></span>' : '';
+    return '<button data-r="' + k + '" class="' + (k === route ? 'on' : '') + '">' + ic(it[0], 'sm') + it[1] + badge + '</button>';
+  }
+  function mobBtn(k) {
+    var it = NAVITEM[k], badge = k === 'pesanan' ? '<span class="cnt" id="badge-mob"></span>' : '';
+    return '<button data-r="' + k + '" class="' + (k === route ? 'on' : '') + '">' + ic(it[0]) + '<span>' + it[1] + '</span>' + badge + '</button>';
+  }
+  function activeCount() { return S.state().orders.filter(function (o) { return ['paid', 'preparing', 'ready'].indexOf(o.status) >= 0; }).length; }
+
+  function draw(live) {
+    var it = NAVITEM[route]; $('#vtitle').textContent = it[1];
+    $$('#nav [data-r]').forEach(function (b) { b.classList.toggle('on', b.dataset.r === route); });
+    $$('#mnav [data-r]').forEach(function (b) { b.classList.toggle('on', b.dataset.r === route); });
+    var n = activeCount();
+    ['badge-nav', 'badge-mob'].forEach(function (id) { var el = document.getElementById(id); if (el) { el.textContent = n; el.style.display = n ? 'grid' : 'none'; } });
+    var was = document.getElementById('view').scrollTop;
+    var fn = { ringkasan: drawDashboard, pesanan: drawKanban, meja: drawTables, menu: drawMenuAdmin, webhook: drawWebhook, pengaturan: drawSettings }[route];
+    if (fn) fn(live);
+  }
+
+  /* ================= RINGKASAN ================= */
+  var range = 12;
+  function drawDashboard() {
+    var st = S.stats(range), view = $('#view');
+    var maxRev = Math.max.apply(null, st.buckets.map(function (b) { return b.rev; }).concat([1]));
+    view.innerHTML =
+      '<div class="rangebar">' + [6, 12, 24].map(function (h) { return '<button data-h="' + h + '" class="' + (h === range ? 'on' : '') + '">' + h + ' jam</button>'; }).join('') + '</div>' +
+      '<div class="stat-grid">' +
+      '<div class="stat"><span>Pendapatan</span><b class="num">' + rp(st.revenue) + '</b><i>' + range + ' jam terakhir</i></div>' +
+      '<div class="stat"><span>Pesanan lunas</span><b class="num">' + st.count + '</b><i>rata-rata ' + rp(st.avg || 0) + '</i></div>' +
+      '<div class="stat"><span>Pesanan aktif</span><b class="num">' + st.active + '</b><i>sedang berjalan sekarang</i></div>' +
+      '<div class="stat"><span>Meja terisi</span><b class="num">' + Array.from(new Set(S.state().orders.filter(function (o) { return ['paid', 'preparing', 'ready'].indexOf(o.status) >= 0; }).map(function (o) { return o.table; }))).length + '</b><i>dari ' + S.state().settings.tables + ' meja</i></div>' +
+      '</div>' +
+      '<div class="panels">' +
+      '<div class="panel"><h2>Pendapatan per jam</h2><div class="bars">' + st.buckets.map(function (b) {
+        var h = Math.max(3, Math.round(b.rev / maxRev * 120));
+        return '<div class="b' + (b.now ? ' now' : '') + '"><i style="height:' + h + 'px" title="' + rp(b.rev) + '"></i><small>' + b.label + '</small></div>';
+      }).join('') + '</div></div>' +
+      '<div class="panel"><h2>Menu terlaris</h2><div class="toplist">' + (st.top.length ? st.top.map(function (t) { return '<div class="tr"><b>' + esc(t.name) + '</b><span class="num">' + t.qty + 'x</span></div>'; }).join('') : '<p class="muted" style="font-size:13px">Belum ada data pada rentang ini.</p>') + '</div></div>' +
+      '</div>' +
+      '<div class="panel" style="margin-top:14px"><h2>Metode pembayaran</h2><div class="paylist">' + (st.pay.length ? st.pay.map(function (p) {
+        var pct = st.revenue ? Math.round(p.rev / st.revenue * 100) : 0;
+        return '<div><div class="pr"><span>' + p.label + ' &middot; ' + p.n + ' pesanan</span><span class="num">' + rp(p.rev) + '</span></div><div class="track"><i style="width:' + pct + '%"></i></div></div>';
+      }).join('') : '<p class="muted" style="font-size:13px">Belum ada pembayaran pada rentang ini.</p>') + '</div></div>';
+    view.querySelectorAll('[data-h]').forEach(function (b) { b.onclick = function () { range = +b.dataset.h; drawDashboard(); }; });
+  }
+
+  /* ================= PESANAN (kanban) ================= */
+  var kq = '';
+  var KCOLS = [['paid', 'Baru masuk'], ['preparing', 'Disiapkan'], ['ready', 'Siap diantar']];
+  function itemsSummary(o) { return o.lines.map(function (l) { return l.qty + '\u00d7 ' + l.name; }).join(', '); }
+  function matches(o) {
+    if (!kq) return true;
+    var s = (o.code + ' ' + o.name + ' meja ' + o.table).toLowerCase();
+    return s.indexOf(kq.toLowerCase()) >= 0;
+  }
+  function drawKanban() {
+    var view = $('#view'), st = S.state();
+    var pendingOnline = st.orders.filter(function (o) { return o.status === 'pending' && o.mode === 'online' && matches(o); });
+    var pendingCash = st.orders.filter(function (o) { return o.status === 'pending' && o.mode === 'cash' && matches(o); });
+    var recentDone = st.orders.filter(function (o) { return o.status === 'delivered' && matches(o); }).sort(function (a, b) { return b.createdAt - a.createdAt; }).slice(0, 6);
+    view.innerHTML =
+      '<div class="ktools"><label class="search" style="height:40px"><input id="kq" placeholder="Cari kode, nama, atau meja" value="' + esc(kq) + '" style="border:0;background:none;outline:0;width:100%;color:var(--ink)"></label>' +
+      (pendingCash.length ? '<span class="badge b-amber">' + ic('cash', 'sm') + pendingCash.length + ' menunggu bayar tunai</span>' : '') +
+      (pendingOnline.length ? '<span class="badge b-amber">' + ic('clock', 'sm') + pendingOnline.length + ' menunggu pembayaran online</span>' : '') +
+      '</div>' +
+      '<div class="kanban">' + KCOLS.map(function (c) {
+        var list = st.orders.filter(function (o) { return o.status === c[0] && matches(o); }).sort(function (a, b) { return a.createdAt - b.createdAt; });
+        return '<div class="kcol"><h2>' + c[1] + '<span class="cnt">' + list.length + '</span></h2><div class="klist">' +
+          (list.length ? list.map(kcard).join('') : '<div class="kempty">Tidak ada pesanan</div>') + '</div></div>';
+      }).join('') + '</div>' +
+      (recentDone.length ? '<h2 class="mcatlbl" style="margin-top:26px">Baru saja diantar</h2><div class="klist" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr));display:grid">' + recentDone.map(kcard).join('') + '</div>' : '');
+    $('#kq').oninput = function (e) { kq = e.target.value; drawKanban(); };
+  }
+  function kcard(o) {
+    var nextLbl = { paid: 'Mulai siapkan', preparing: 'Tandai siap', ready: 'Tandai diantar' }[o.status];
+    return '<article class="kcard" data-code="' + o.code + '"><div class="kr"><b class="code num">' + o.code + '</b><span class="tbl">Meja ' + o.table + '</span></div>' +
+      '<div class="items">' + esc(itemsSummary(o)) + '</div>' +
+      '<div class="kf"><b class="num">' + rp(o.total) + '</b><small>' + S.ago(o.createdAt) + '</small></div>' +
+      (nextLbl ? '<button class="btn btn-quiet btn-sm btn-block adv" data-adv="' + o.code + '">' + nextLbl + '</button>' : '') + '</article>';
+  }
+  function openOrderSheet(code) {
+    var o = S.byCode(code); if (!o) return;
+    var st = S.STATUS[o.status];
+    var lines = o.lines.map(function (l) { return '<div class="cline"><div><b>' + l.qty + '\u00d7 ' + esc(l.name) + '</b>' + (l.opts.length ? '<small>' + esc(l.opts.join(', ')) + '</small>' : '') + (l.note ? '<small>Catatan: ' + esc(l.note) + '</small>' : '') + '</div><div class="pr">' + rp(l.unit * l.qty) + '</div></div>'; }).join('');
+    var actions = '';
+    if (o.status === 'pending' && o.mode === 'cash') actions = '<button class="btn btn-primary btn-block" data-cash="' + o.code + '">Tandai lunas (tunai diterima)</button><button class="btn btn-quiet btn-block" data-cancelo="' + o.code + '">Batalkan pesanan</button>';
+    else if (['paid', 'preparing', 'ready'].indexOf(o.status) >= 0) { var nx = { paid: 'preparing', preparing: 'ready', ready: 'delivered' }[o.status]; var lbl = { preparing: 'Mulai disiapkan', ready: 'Tandai siap diantar', delivered: 'Tandai sudah diantar' }[nx]; actions = '<button class="btn btn-primary btn-block" data-adv="' + o.code + '">' + lbl + '</button><button class="btn btn-quiet btn-block" data-refund="' + o.code + '">Batalkan &amp; refund</button>'; }
+    else if (o.status === 'delivered') actions = '<span class="badge b-sage">' + ic('check', 'sm') + 'Selesai</span>';
+    var sh = openSheet(
+      '<div class="grab"></div><div class="sheet-head"><h3>' + o.code + '</h3><button class="icon-btn" data-close>' + ic('x') + '</button></div>' +
+      '<div class="sheet-body"><div class="row" style="gap:8px;flex-wrap:wrap"><span class="badge ' + (st ? st.k : '') + '"><i></i>' + (st ? st.t : o.status) + '</span><span class="badge">' + ic('table', 'sm') + 'Meja ' + o.table + '</span>' + (o.name ? '<span class="badge">' + ic('user', 'sm') + esc(o.name) + '</span>' : '') + '</div>' +
+      '<h2 style="font-family:var(--serif);font-weight:400;font-size:17px;margin-top:16px">Rincian pesanan</h2>' + lines +
+      '<div class="sum num"><div><span>Subtotal</span><span>' + rp(o.sub) + '</span></div><div><span>Service</span><span>' + rp(o.service) + '</span></div><div><span>Pajak</span><span>' + rp(o.tax) + '</span></div><div class="t"><span>Total</span><span>' + rp(o.total) + '</span></div></div>' +
+      (o.method ? '<p class="muted" style="margin-top:10px;font-size:13px">Dibayar via ' + (S.METHOD[o.method] || o.method) + (o.paidAt ? ' &middot; ' + S.timeStr(o.paidAt) : '') + '</p>' : '') +
+      '</div><div class="sheet-foot" style="display:grid;gap:10px">' + actions + '</div>', { mid: true });
+    sh.sheet.addEventListener('click', function (e) {
+      var a = e.target.closest('[data-adv]'), c = e.target.closest('[data-cash]'), x = e.target.closest('[data-cancelo]'), r = e.target.closest('[data-refund]');
+      if (a) { S.advance(a.dataset.adv); S.beep(); sh.close(); }
+      if (c) { S.cashPaid(c.dataset.cash); S.toast('Pembayaran tunai dicatat.', { icon: 'check' }); sh.close(); }
+      if (x) { S.cancelOrder(x.dataset.cancelo); sh.close(); }
+      if (r) { S.refund(r.dataset.refund); S.toast('Pesanan dibatalkan dan dana dikembalikan (simulasi).', { icon: 'info' }); sh.close(); }
+    });
+  }
+
+  /* ================= MEJA & QR ================= */
+  function drawTables() {
+    var n = S.state().settings.tables, view = $('#view'), html = '';
+    for (var i = 1; i <= n; i++) {
+      var st = S.tableStatus(i);
+      html += '<button class="tcard' + (st.busy ? ' busy' : '') + '" data-t="' + i + '"><b>' + i + '</b><span><i></i>' + (st.busy ? st.n + ' pesanan aktif' : 'Kosong') + '</span></button>';
+    }
+    view.innerHTML = '<p class="muted" style="margin-bottom:16px;max-width:56ch">Setiap meja punya QR sendiri yang mengarah langsung ke menu dengan nomor meja terisi otomatis. Klik meja untuk melihat dan mencetak QR-nya.</p><div class="tgrid2">' + html + '</div>';
+    view.querySelectorAll('[data-t]').forEach(function (b) { b.onclick = function () { openTableQr(+b.dataset.t); }; });
+  }
+  function openTableQr(n) {
+    var url = S.tableUrl(n);
+    var sh = openSheet(
+      '<div class="grab"></div><div class="sheet-head"><h3>QR Meja ' + n + '</h3><button class="icon-btn" data-close>' + ic('x') + '</button></div>' +
+      '<div class="sheet-body center"><div class="qrbox" style="margin-left:auto;margin-right:auto">' + S.qrSvg(url, { label: 'QR Meja ' + n }) + '</div>' +
+      '<p class="muted num" style="margin-top:10px;font-size:12.5px;word-break:break-all">' + esc(url) + '</p></div>' +
+      '<div class="sheet-foot" style="display:grid;gap:10px;grid-template-columns:1fr 1fr"><button class="btn btn-line" id="pr">' + ic('print', 'sm') + 'Cetak</button><a class="btn btn-primary" href="' + url + '" target="_blank" rel="noopener">' + ic('external', 'sm') + 'Buka menu</a></div>', { mid: true });
+    $('#pr', sh.sheet).onclick = function () { window.print(); };
+  }
+
+  /* ================= MENU ADMIN ================= */
+  function drawMenuAdmin() {
+    var st = S.state(), view = $('#view');
+    view.innerHTML = '<div class="mtoolbar"><p class="muted" style="max-width:52ch">Matikan menu yang sedang habis, atau ubah harga dan add on. Perubahan langsung terlihat di halaman pelanggan.</p><button class="btn btn-primary" id="addm">' + ic('plus', 'sm') + 'Tambah menu</button></div>';
+    S.CATS.forEach(function (c) {
+      var items = st.menu.filter(function (m) { return m.cat === c; }); if (!items.length) return;
+      var wrap = document.createElement('div'); wrap.innerHTML = '<h2 class="mcatlbl">' + c + '</h2>' + items.map(mrow).join('');
+      view.appendChild(wrap);
+    });
+    view.querySelectorAll('[data-tog]').forEach(function (s) { s.onchange = function () { S.menuToggle(s.dataset.tog); }; });
+    view.querySelectorAll('[data-edit]').forEach(function (b) { b.onclick = function () { openMenuForm(S.state().menu.find(function (m) { return m.id === b.dataset.edit; })); }; });
+    $('#addm').onclick = function () { openMenuForm(null); };
+  }
+  function mrow(m) {
+    var tags = S.priceTags(m).map(function (t) { return (t.l ? t.l + ' ' : '') + S.kfmt(t.v); }).join(' &middot; ');
+    return '<div class="mrow"><div class="tile ' + S.CAT_TILE[m.cat] + '">' + ic(m.ic) + '</div>' +
+      '<div class="mid"><b>' + esc(m.name) + (m.tag ? ' <span class="tag">' + m.tag + '</span>' : '') + '</b><div class="pr num">' + tags + '</div></div>' +
+      '<div class="mact"><label class="switch"><input type="checkbox" data-tog="' + m.id + '"' + (m.on !== false ? ' checked' : '') + '><i></i></label><button class="icon-btn" data-edit="' + m.id + '">' + ic('edit', 'sm') + '</button></div></div>';
+  }
+  function openMenuForm(m) {
+    var isNew = !m; m = m || { cat: S.CATS[0], name: '', desc: '', price: 20000, ic: 'cup' };
+    var sh = openSheet(
+      '<div class="grab"></div><div class="sheet-head"><h3>' + (isNew ? 'Tambah menu' : 'Ubah menu') + '</h3><button class="icon-btn" data-close>' + ic('x') + '</button></div>' +
+      '<div class="sheet-body">' +
+      '<label class="field"><span>Nama menu</span><input class="input" id="fn" value="' + esc(m.name) + '" maxlength="40"></label>' +
+      '<label class="field"><span>Deskripsi singkat</span><textarea class="input" id="fd" maxlength="140">' + esc(m.desc || '') + '</textarea></label>' +
+      '<label class="field"><span>Kategori</span><select class="input" id="fc">' + S.CATS.map(function (c) { return '<option' + (c === m.cat ? ' selected' : '') + '>' + c + '</option>'; }).join('') + '</select></label>' +
+      '<label class="field"><span>Harga dasar (Rp)</span><input class="input num" id="fp" type="number" step="500" value="' + m.price + '"></label>' +
+      '<p class="muted" style="margin-top:14px;font-size:12.5px">Opsi Hot/Ice dan Add on memakai nilai standar pada demo ini. Sesuaikan lebih lanjut nanti di sistem produksi.</p>' +
+      '</div><div class="sheet-foot" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">' +
+      (isNew ? '' : '<button class="btn btn-danger" id="fdel">' + ic('trash', 'sm') + 'Hapus</button>') +
+      '<button class="btn btn-primary" id="fsave" style="' + (isNew ? 'grid-column:1/-1' : '') + '">Simpan</button></div>', { mid: true });
+    var root2 = sh.sheet;
+    $('#fsave', root2).onclick = function () {
+      var name = $('#fn', root2).value.trim(); if (!name) return;
+      S.menuSave({ id: m.id, name: name, desc: $('#fd', root2).value.trim(), cat: $('#fc', root2).value, price: Math.max(0, +$('#fp', root2).value || 0), ic: m.ic, opts: m.opts, tag: m.tag, on: m.on });
+      S.toast('Menu disimpan.', { icon: 'check' }); sh.close();
+    };
+    var del = $('#fdel', root2); if (del) del.onclick = function () { S.menuRemove(m.id); sh.close(); };
+  }
+
+  /* ================= LOG WEBHOOK ================= */
+  function drawWebhook() {
+    var st = S.state(), view = $('#view');
+    var hooks = st.hooks.slice(0, 40);
+    view.innerHTML = '<p class="muted" style="margin-bottom:16px;max-width:60ch">Ini meniru endpoint <span class="mono">POST /api/midtrans/notification</span>: setiap baris adalah notifikasi yang diterima, hasil verifikasi tanda tangan, dan tindakan yang diambil server.</p>' +
+      (hooks.length ? '<div class="wlog">' + hooks.map(wrow).join('') + '</div>' : '<div class="empty">' + ic('bolt') + '<h3>Belum ada notifikasi</h3><p>Coba lakukan pembayaran dari sisi pelanggan.</p></div>');
+  }
+  function wrow(h) {
+    var cls = !h.verified ? 'bad' : h.dup ? 'dup' : 'ok';
+    var icn = !h.verified ? 'x' : h.dup ? 'copy' : 'check';
+    return '<div class="wrow ' + cls + '"><span class="wc">' + ic(icn, 'sm') + '</span>' +
+      '<div><b><span class="mono">' + h.code + '</span> ' + h.payload.transaction_status + ' <span class="badge">HTTP ' + h.http + '</span></b><p>' + esc(h.note) + '</p></div>' +
+      '<time class="num">' + S.timeStr(h.at) + '</time></div>';
+  }
+
+  /* ================= PENGATURAN ================= */
+  function drawSettings() {
+    var set = S.state().settings, view = $('#view');
+    view.innerHTML = '<div class="setgrid">' +
+      '<div class="setcard"><h2>Biaya tambahan</h2><p class="d">Dihitung otomatis ke total pesanan pelanggan.</p>' +
+      '<div class="setrow"><div><b>Pajak PB1</b><small>Persen dari subtotal + service</small></div><input class="input numw" id="stax" type="number" value="' + set.tax + '"></div>' +
+      '<div class="setrow"><div><b>Service charge</b><small>Persen dari subtotal</small></div><input class="input numw" id="ssvc" type="number" value="' + set.service + '"></div></div>' +
+      '<div class="setcard"><h2>Operasional</h2><p class="d">Pengaturan umum kafe.</p>' +
+      '<div class="setrow"><div><b>Izinkan bayar tunai</b><small>Pelanggan bisa pilih bayar di kasir</small></div><label class="switch"><input type="checkbox" id="scash"' + (set.cash ? ' checked' : '') + '><i></i></label></div>' +
+      '<div class="setrow"><div><b>Suara notifikasi</b><small>Bunyi saat pesanan baru masuk</small></div><label class="switch"><input type="checkbox" id="ssound"' + (set.sound ? ' checked' : '') + '><i></i></label></div>' +
+      '<div class="setrow"><div><b>Jumlah meja</b><small>Menentukan banyak QR yang dibuat</small></div><input class="input numw" id="stbl" type="number" min="1" max="40" value="' + set.tables + '"></div></div>' +
+      '<div class="setcard"><h2>Kunci server (simulasi)</h2><p class="d">Dipakai untuk membuat dan memverifikasi tanda tangan notifikasi Midtrans di demo ini.</p>' +
+      '<div class="keybox"><span class="mono" style="flex:1;overflow:hidden;text-overflow:ellipsis">' + S.SERVER_KEY + '</span></div>' +
+      '<p class="muted" style="margin-top:10px;font-size:12px">Pada sistem produksi, kunci ini disimpan di server dan tidak pernah dikirim ke browser.</p></div>' +
+      '<div class="setcard"><h2>Data demo</h2><p class="d">Semua data tersimpan di browser ini (localStorage), bukan di server sungguhan.</p>' +
+      '<button class="btn btn-danger btn-block" id="sreset">' + ic('refresh', 'sm') + 'Reset ke data contoh awal</button></div>' +
+      '</div>';
+    $('#stax').onchange = function (e) { S.setSettings({ tax: Math.max(0, +e.target.value || 0) }); };
+    $('#ssvc').onchange = function (e) { S.setSettings({ service: Math.max(0, +e.target.value || 0) }); };
+    $('#scash').onchange = function (e) { S.setSettings({ cash: e.target.checked }); };
+    $('#ssound').onchange = function (e) { S.setSettings({ sound: e.target.checked }); };
+    $('#stbl').onchange = function (e) { S.setSettings({ tables: Math.min(40, Math.max(1, +e.target.value || 1)) }); };
+    $('#sreset').onclick = function () { S.reset(); S.toast('Data demo direset.', { icon: 'refresh' }); };
+  }
+
+  /* ---------------- notifikasi bunyi untuk order baru ---------------- */
+  var seenCount = null;
+  function watchNewOrders() {
+    var n = S.state().orders.filter(function (o) { return o.status === 'paid'; }).length;
+    if (seenCount !== null && n > seenCount && S.state().settings.sound) { S.beep(); S.toast('Pesanan baru masuk.', { icon: 'bell' }); }
+    seenCount = n;
+  }
+  S.on(watchNewOrders); watchNewOrders();
+
+  /* ---------------- delegasi klik global (dipasang sekali) ---------------- */
+  document.addEventListener('click', function (e) {
+    var nv = e.target.closest('[data-r]');
+    if (nv) { route = nv.dataset.r; renderShell(); return; }
+    if (route !== 'pesanan') return;
+    var adv = e.target.closest('[data-adv]');
+    if (adv) { S.advance(adv.dataset.adv); S.beep(); return; }
+    var card = e.target.closest('[data-code]');
+    if (card) openOrderSheet(card.dataset.code);
+  });
+
+  function boot() {
+    if (!role || !ROLES[role]) { renderLogin(); return; }
+    renderShell();
+  }
+  boot();
+})();
+</script>
+</body>
+</html>

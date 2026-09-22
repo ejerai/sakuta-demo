@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F6F5F3">
+<title>Sakuta | Demo pemesanan &amp; pembayaran QR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Young+Serif&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="sakuta.css">
+<script>(function(){try{var t=localStorage.getItem("sk_theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}})()</script>
+<style>
+body{background:var(--paper)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 22px 80px}
+.top{display:flex;align-items:center;justify-content:space-between;height:76px}
+.top .r{display:flex;align-items:center;gap:10px}
+
+/* Hero */
+.hero{padding:26px 0 8px;display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:center}
+.hero .kicker{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--cocoa-2);background:var(--oat);padding:7px 13px 7px 11px;border-radius:99px}
+.hero .kicker i{width:6px;height:6px;border-radius:50%;background:var(--sage)}
+.hero h1{font-family:var(--serif);font-weight:400;font-size:46px;line-height:1.08;letter-spacing:-.015em;margin-top:16px}
+.hero p{color:var(--ink-2);font-size:16.5px;line-height:1.55;margin-top:16px;max-width:46ch}
+.hero .cta{display:flex;gap:10px;margin-top:26px;flex-wrap:wrap}
+.phone-shell{justify-self:center;width:100%;max-width:290px;aspect-ratio:290/584;border-radius:38px;background:var(--ink);padding:11px;box-shadow:var(--shadow-m)}
+.phone-shell iframe{width:100%;height:100%;border:0;border-radius:28px;background:var(--paper);display:block}
+
+/* Bagian umum */
+.section{padding:56px 0 0}
+.section .head{max-width:60ch}
+.section .eyebrow{font-size:13px;font-weight:600;color:var(--cocoa-2)}
+.section h2{font-family:var(--serif);font-weight:400;font-size:29px;letter-spacing:-.01em;margin-top:8px}
+.section .lead{color:var(--ink-2);margin-top:8px;line-height:1.55}
+
+/* Kartu alur (3 peran) */
+.roles{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
+.rc{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:24px;display:flex;flex-direction:column;gap:14px}
+.rc .mi{width:44px;height:44px;border-radius:13px;background:var(--oat);color:var(--cocoa);display:grid;place-items:center}
+.rc h3{font-weight:600;font-size:16.5px}
+.rc p{color:var(--ink-2);font-size:13.8px;line-height:1.5;flex:1}
+.rc a{align-self:flex-start}
+
+/* Alur pembayaran */
+.flow{margin-top:30px;display:grid;grid-template-columns:repeat(5,1fr);gap:0;align-items:stretch}
+.fstep{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 15px;position:relative}
+.fstep b{display:block;font-weight:600;font-size:14px;margin-bottom:4px}
+.fstep span{display:block;color:var(--ink-2);font-size:12.5px;line-height:1.4}
+.fstep .n{width:24px;height:24px;border-radius:50%;background:var(--cocoa);color:var(--on-cocoa);font-size:12px;font-weight:700;display:grid;place-items:center;margin-bottom:10px}
+.farrow{display:grid;place-items:center;color:var(--ink-3)}
+@media(max-width:860px){.flow{grid-template-columns:1fr;gap:10px}.farrow{transform:rotate(90deg);height:14px}}
+
+/* Fitur */
+.feat{margin-top:26px;display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.fi{display:flex;gap:14px;padding:16px 4px;border-bottom:1px solid var(--line-2)}
+.fi .mi{width:38px;height:38px;border-radius:11px;background:var(--oat);color:var(--cocoa);display:grid;place-items:center;flex:none}
+.fi b{display:block;font-weight:600;font-size:14.5px;margin-bottom:3px}
+.fi p{color:var(--ink-2);font-size:13.3px;line-height:1.5}
+
+/* Kartu akses (meja demo) */
+.access{margin-top:28px;background:var(--hero);border-radius:26px;padding:34px 30px;color:#F3EEE9;display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center}
+.access h2{color:#fff}
+.access .lead{color:#D9CCC1}
+.access .tables{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.access .tables a{height:38px;padding:0 15px;border-radius:99px;background:rgba(255,255,255,.1);color:#fff;font-weight:600;font-size:13.5px;text-decoration:none;display:inline-flex;align-items:center;border:1px solid rgba(255,255,255,.16)}
+.access .tables a:hover{background:rgba(255,255,255,.18)}
+.access .qrcard{background:#fff;border-radius:20px;padding:16px;justify-self:center;width:186px}
+.access .qrcard svg{width:100%;height:auto}
+.access .qrcard p{color:var(--ink-2);font-size:11.5px;text-align:center;margin-top:8px}
+
+/* Cakupan / bukan cakupan */
+.scope{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:26px}
+.scard{border:1px solid var(--line);border-radius:20px;padding:20px}
+.scard h3{display:flex;align-items:center;gap:9px;font-weight:600;font-size:15px}
+.scard h3 .ic{width:19px;height:19px}
+.scard ul{margin-top:12px;display:grid;gap:9px}
+.scard li{display:flex;gap:10px;font-size:13.6px;color:var(--ink-2);line-height:1.4}
+.scard li .ic{flex:none;margin-top:1px}
+.scard.yes h3{color:var(--sage)}
+.scard.yes .ic{color:var(--sage)}
+.scard.no h3{color:var(--ink-2)}
+.scard.no .ic{color:var(--ink-3)}
+
+/* Stack teknis */
+.stack{margin-top:24px;display:flex;flex-wrap:wrap;gap:9px}
+.stack span{height:34px;padding:0 14px;border-radius:99px;background:var(--oat);color:var(--cocoa-2);font-size:13px;font-weight:600;display:inline-flex;align-items:center}
+
+footer{margin-top:64px;padding-top:26px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;color:var(--ink-3);font-size:13px}
+
+@media(max-width:860px){
+  .hero{grid-template-columns:1fr;gap:32px}
+  .hero h1{font-size:36px}
+  .phone-shell{max-width:240px;justify-self:start}
+  .roles{grid-template-columns:1fr}
+  .feat{grid-template-columns:1fr}
+  .access{grid-template-columns:1fr}
+  .access .qrcard{justify-self:start}
+  .scope{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <span class="logo">Sakuta demo</span>
+    <div class="r">
+      <a class="btn btn-line btn-sm" href="https://github.com/ejerai" target="_blank" rel="noopener">Github</a>
+      <button class="icon-btn" data-theme-toggle title="Mode terang atau gelap" aria-label="Ganti tema"></button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div>
+      <span class="kicker"><i></i>Demo interaktif &mdash; tidak ada transaksi sungguhan</span>
+      <h1>Pesan dari meja, bayar dari ponsel, kasir langsung tahu.</h1>
+      <p>Ini adalah pratinjau alur pemesanan untuk Sakuta Coffee: pelanggan memindai QR di meja, memesan dari menu asli kafe, dan membayar lewat simulasi Midtrans. Setiap pembayaran otomatis masuk ke dashboard kasir secara langsung.</p>
+      <div class="cta">
+        <a class="btn btn-primary btn-lg" href="menu.html?meja=4">Coba sebagai pelanggan</a>
+        <a class="btn btn-line btn-lg" href="admin.html">Buka dashboard kasir</a>
+      </div>
+    </div>
+    <div class="phone-shell"><iframe src="menu.html?meja=4&embed=1" title="Pratinjau halaman pelanggan Sakuta" loading="lazy"></iframe></div>
+  </section>
+
+  <section class="section">
+    <div class="head">
+      <span class="eyebrow">Tiga sisi, satu alur</span>
+      <h2>Semua yang terlibat saat pelanggan memesan</h2>
+      <p class="lead">Demo ini dibagi menjadi tiga bagian yang saling terhubung secara langsung, persis seperti sistem yang akan berjalan di kafe.</p>
+    </div>
+    <div class="roles">
+      <div class="rc">
+        <span class="mi" id="ic-phone"></span>
+        <h3>Pelanggan</h3>
+        <p>Memindai QR di meja, memilih menu asli Sakuta (hot atau ice, dengan add on), lalu membayar online atau memilih bayar di kasir.</p>
+        <a class="linkbtn" href="menu.html?meja=4">Buka halaman pelanggan &rarr;</a>
+      </div>
+      <div class="rc">
+        <span class="mi" id="ic-monitor"></span>
+        <h3>Kasir &amp; dapur</h3>
+        <p>Begitu pembayaran dikonfirmasi Midtrans, pesanan langsung muncul di dashboard dengan bunyi notifikasi, lalu diproses hingga diantar.</p>
+        <a class="linkbtn" href="admin.html">Buka dashboard admin &rarr;</a>
+      </div>
+      <div class="rc">
+        <span class="mi" id="ic-qr"></span>
+        <h3>QR tiap meja</h3>
+        <p>Setiap meja punya QR sendiri, dibuat dan dicetak dari dashboard admin. Pelanggan cukup memindai untuk langsung membuka menu meja tersebut.</p>
+        <a class="linkbtn" href="admin.html#/qr">Lihat QR meja &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="head">
+      <span class="eyebrow">Alur pembayaran</span>
+      <h2>Dari scan meja sampai kasir tahu pesanan lunas</h2>
+      <p class="lead">Bagian yang paling penting bagi operasional kafe: begitu pelanggan membayar, kasir tidak perlu mengecek manual.</p>
+    </div>
+    <div class="flow">
+      <div class="fstep"><span class="n">1</span><b>Scan &amp; pesan</b><span>Pelanggan memindai QR meja dan memilih menu.</span></div>
+      <div class="farrow">&rarr;</div>
+      <div class="fstep"><span class="n">2</span><b>Bayar Midtrans</b><span>QRIS, e-wallet, virtual account, atau kartu.</span></div>
+      <div class="farrow">&rarr;</div>
+      <div class="fstep"><span class="n">3</span><b>Notifikasi terverifikasi</b><span>Server memvalidasi tanda tangan Midtrans.</span></div>
+      <div class="farrow">&rarr;</div>
+      <div class="fstep"><span class="n">4</span><b>Kasir diberi tahu</b><span>Pesanan langsung muncul, disertai bunyi.</span></div>
+      <div class="farrow">&rarr;</div>
+      <div class="fstep"><span class="n">5</span><b>Diproses &amp; diantar</b><span>Status berubah sampai sampai ke meja.</span></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="head">
+      <span class="eyebrow">Yang bisa dicoba</span>
+      <h2>Detail yang dibangun ke dalam demo ini</h2>
+    </div>
+    <div class="feat">
+      <div class="fi"><span class="mi" id="ic-bell"></span><div><b>Kasir tahu seketika</b><p>Order baru dan pembayaran lunas muncul otomatis di dashboard tanpa perlu memuat ulang halaman.</p></div></div>
+      <div class="fi"><span class="mi" id="ic-truck"></span><div><b>Status sampai ke meja</b><p>Baru masuk &rarr; disiapkan &rarr; siap diantar &rarr; sudah diantar, terlihat oleh kasir dan pelanggan.</p></div></div>
+      <div class="fi"><span class="mi" id="ic-shield"></span><div><b>Simulasi Midtrans yang realistis</b><p>Verifikasi tanda tangan, kode VA, status kedaluwarsa 15 menit, dan penanganan notifikasi duplikat.</p></div></div>
+      <div class="fi"><span class="mi" id="ic-grid"></span><div><b>Kelola menu &amp; meja</b><p>Nyalakan atau matikan menu yang habis, atur pajak dan service, cetak QR tiap meja dari dashboard.</p></div></div>
+      <div class="fi"><span class="mi" id="ic-chart"></span><div><b>Ringkasan penjualan</b><p>Pendapatan per jam, menu terlaris, dan komposisi metode pembayaran di satu layar.</p></div></div>
+      <div class="fi"><span class="mi" id="ic-moon"></span><div><b>Mode terang &amp; gelap</b><p>Seluruh tampilan, dari menu pelanggan sampai dashboard admin, mendukung kedua tema.</p></div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="access">
+      <div>
+        <span class="eyebrow" style="color:#D9CCC1">Coba langsung dari ponselmu</span>
+        <h2>Pindai untuk membuka menu Meja 4</h2>
+        <p class="lead">QR ini memakai data demo yang sama dengan yang akan dicetak untuk tiap meja di kafe. Atau, pilih meja lain di bawah.</p>
+        <div class="tables" id="tbls"></div>
+      </div>
+      <div class="qrcard">
+        <div id="qrhost"></div>
+        <p>menu.html?meja=4</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="head">
+      <span class="eyebrow">Transparansi demo</span>
+      <h2>Apa yang nyata, apa yang disimulasikan</h2>
+      <p class="lead">Supaya tidak ada yang disalahpahami saat presentasi, berikut batasan jujur dari demo statis ini.</p>
+    </div>
+    <div class="scope">
+      <div class="scard yes">
+        <h3 id="s-yes"></h3>
+        <ul>
+          <li><span class="ic" id="i1"></span>Alur lengkap: scan meja, pesan, bayar, kasir menerima, sampai status diantar.</li>
+          <li><span class="ic" id="i2"></span>Tampilan dan interaksi antarmuka yang akan dipakai pelanggan dan kasir sungguhan.</li>
+          <li><span class="ic" id="i3"></span>Logika perhitungan harga, pajak, service, dan verifikasi notifikasi pembayaran.</li>
+          <li><span class="ic" id="i4"></span>Menu asli Sakuta Coffee, lengkap dengan harga Hot dan Ice.</li>
+        </ul>
+      </div>
+      <div class="scard no">
+        <h3 id="s-no"></h3>
+        <ul>
+          <li><span class="ic" id="j1"></span>Tidak memakai akun Midtrans sungguhan; tidak ada uang yang berpindah.</li>
+          <li><span class="ic" id="j2"></span>Data tersimpan di browser (localStorage), bukan di server atau database.</li>
+          <li><span class="ic" id="j3"></span>Login admin belum tersambung ke sistem keamanan sungguhan.</li>
+          <li><span class="ic" id="j4"></span>Versi produksi akan memakai server, database, dan API Midtrans yang sebenarnya.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="stack" id="stack"></div>
+  </section>
+
+  <footer>
+    <span>Dibuat untuk Sakuta Coffee &mdash; demo statis, dipublikasikan lewat GitHub Pages.</span>
+    <span id="reset"></span>
+  </footer>
+</div>
+
+<script src="qrcode.js"></script>
+<script src="sakuta-core.js"></script>
+<script>
+(function () {
+  'use strict';
+  var S = window.Sakuta, ic = S.icon;
+  document.getElementById('ic-phone').innerHTML = ic('phone', 'lg');
+  document.getElementById('ic-monitor').innerHTML = ic('monitor', 'lg');
+  document.getElementById('ic-qr').innerHTML = ic('qr', 'lg');
+  document.getElementById('ic-bell').innerHTML = ic('bell');
+  document.getElementById('ic-truck').innerHTML = ic('truck');
+  document.getElementById('ic-shield').innerHTML = ic('shield');
+  document.getElementById('ic-grid').innerHTML = ic('grid');
+  document.getElementById('ic-chart').innerHTML = ic('chart');
+  document.getElementById('ic-moon').innerHTML = ic('moon');
+  document.getElementById('s-yes').innerHTML = ic('check') + 'Yang bisa dicoba sepenuhnya';
+  document.getElementById('s-no').innerHTML = ic('info') + 'Yang belum sungguhan';
+  ['i1', 'i2', 'i3', 'i4'].forEach(function (id) { document.getElementById(id).innerHTML = ic('check', 'sm'); });
+  ['j1', 'j2', 'j3', 'j4'].forEach(function (id) { document.getElementById(id).innerHTML = ic('x', 'sm'); });
+
+  document.getElementById('qrhost').innerHTML = S.qrSvg(S.tableUrl(4), { label: 'QR Meja 4' });
+  var tw = document.getElementById('tbls'), html = '';
+  for (var i = 1; i <= S.state().settings.tables; i++) html += '<a href="menu.html?meja=' + i + '">Meja ' + i + '</a>';
+  tw.innerHTML = html;
+
+  ['Astro', 'Node.js', 'PostgreSQL', 'Midtrans Snap API', 'GitHub Pages (demo ini)'].forEach(function (t) {
+    document.getElementById('stack').insertAdjacentHTML('beforeend', '<span>' + t + '</span>');
+  });
+
+  document.getElementById('reset').innerHTML = '<button class="linkbtn" id="rs">' + ic('refresh', 'sm') + 'Reset data demo</button>';
+  document.getElementById('rs').onclick = function () { S.reset(); S.toast('Data demo direset ke kondisi awal.', { icon: 'refresh' }); };
+})();
+</script>
+</body>
+</html>

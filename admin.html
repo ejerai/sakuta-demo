@@ -340,13 +340,13 @@ body{background:var(--paper)}
   function drawKanban() {
     var view = $('#view'), st = S.state();
     var pendingOnline = st.orders.filter(function (o) { return o.status === 'pending' && o.mode === 'online' && matches(o); });
-    var pendingCash = st.orders.filter(function (o) { return o.status === 'pending' && o.mode === 'cash' && matches(o); });
+    var pendingCash = st.orders.filter(function (o) { return o.status === 'pending' && o.mode === 'cash' && matches(o); }).sort(function (a, b) { return a.createdAt - b.createdAt; });
     var recentDone = st.orders.filter(function (o) { return o.status === 'delivered' && matches(o); }).sort(function (a, b) { return b.createdAt - a.createdAt; }).slice(0, 6);
     view.innerHTML =
       '<div class="ktools"><label class="search" style="height:40px"><input id="kq" placeholder="Cari kode, nama, atau meja" value="' + esc(kq) + '" style="border:0;background:none;outline:0;width:100%;color:var(--ink)"></label>' +
-      (pendingCash.length ? '<span class="badge b-amber">' + ic('cash', 'sm') + pendingCash.length + ' menunggu bayar tunai</span>' : '') +
       (pendingOnline.length ? '<span class="badge b-amber">' + ic('clock', 'sm') + pendingOnline.length + ' menunggu pembayaran online</span>' : '') +
       '</div>' +
+      (pendingCash.length ? '<h2 class="mcatlbl" style="color:var(--amber);display:flex;align-items:center;gap:8px">' + ic('cash', 'sm') + 'Menunggu bayar tunai <span class="cnt" style="background:var(--amber-t);color:var(--amber)">' + pendingCash.length + '</span></h2><div class="klist" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr));display:grid;margin-bottom:22px">' + pendingCash.map(cashCard).join('') + '</div>' : '') +
       '<div class="kanban">' + KCOLS.map(function (c) {
         var list = st.orders.filter(function (o) { return o.status === c[0] && matches(o); }).sort(function (a, b) { return a.createdAt - b.createdAt; });
         return '<div class="kcol"><h2>' + c[1] + '<span class="cnt">' + list.length + '</span></h2><div class="klist">' +
@@ -354,6 +354,12 @@ body{background:var(--paper)}
       }).join('') + '</div>' +
       (recentDone.length ? '<h2 class="mcatlbl" style="margin-top:26px">Baru saja diantar</h2><div class="klist" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr));display:grid">' + recentDone.map(kcard).join('') + '</div>' : '');
     $('#kq').oninput = function (e) { kq = e.target.value; drawKanban(); };
+  }
+  function cashCard(o) {
+    return '<article class="kcard" data-code="' + o.code + '" style="border-color:var(--amber-t)"><div class="kr"><b class="code num">' + o.code + '</b><span class="tbl">Meja ' + o.table + '</span></div>' +
+      '<div class="items">' + esc(itemsSummary(o)) + '</div>' +
+      '<div class="kf"><b class="num">' + rp(o.total) + '</b><small>' + S.ago(o.createdAt) + '</small></div>' +
+      '<button class="btn btn-primary btn-sm btn-block adv" data-cash="' + o.code + '">' + ic('cash', 'sm') + 'Tandai lunas</button></article>';
   }
   function kcard(o) {
     var nextLbl = { paid: 'Mulai siapkan', preparing: 'Tandai siap', ready: 'Tandai diantar' }[o.status];
@@ -507,6 +513,8 @@ body{background:var(--paper)}
     var nv = e.target.closest('[data-r]');
     if (nv) { route = nv.dataset.r; renderShell(); return; }
     if (route !== 'pesanan') return;
+    var cash = e.target.closest('[data-cash]');
+    if (cash) { S.cashPaid(cash.dataset.cash); S.toast('Pembayaran tunai dicatat.', { icon: 'check' }); return; }
     var adv = e.target.closest('[data-adv]');
     if (adv) { S.advance(adv.dataset.adv); S.beep(); return; }
     var card = e.target.closest('[data-code]');

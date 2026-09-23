@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#F6F5F3">
 <title>Sakuta | Dashboard</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Young+Serif&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="sakuta.css">
 <script>(function(){try{var t=localStorage.getItem("sk_theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}})()</script>
 <style>
@@ -20,7 +17,7 @@ body{background:var(--paper)}
 .login{min-height:calc(100vh - 40px);min-height:calc(100dvh - 40px);display:grid;place-items:center;padding:24px}
 .login-card{width:100%;max-width:400px;background:var(--card);border:1px solid var(--line);border-radius:26px;padding:30px 26px}
 .login-card>.logo{justify-content:center;display:flex;margin-bottom:4px}
-.login-card h1{font-family:var(--serif);font-weight:400;font-size:23px;text-align:center;margin-top:10px}
+.login-card h1{font-family:var(--serif);font-weight:600;font-size:23px;text-align:center;margin-top:10px}
 .login-card>p{color:var(--ink-2);font-size:13.5px;text-align:center;margin-top:6px}
 .roles2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}
 .role{border:1px solid var(--line);border-radius:16px;padding:15px 12px;text-align:left;background:var(--card);transition:border-color .15s,background .15s}
@@ -50,7 +47,7 @@ body{background:var(--paper)}
 
 .main{min-width:0}
 .topbar{position:sticky;top:0;z-index:20;height:64px;padding:0 26px;display:flex;align-items:center;gap:12px;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.topbar h1{font-family:var(--serif);font-weight:400;font-size:19px}
+.topbar h1{font-family:var(--serif);font-weight:600;font-size:19px}
 .topbar .sp{flex:1}
 .mobnav{display:none}
 .view{padding:22px 26px 60px}
@@ -74,7 +71,7 @@ body{background:var(--paper)}
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .stat{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px}
 .stat span{color:var(--ink-2);font-size:12.5px;font-weight:600}
-.stat b{display:block;font-family:var(--serif);font-weight:400;font-size:26px;margin-top:8px}
+.stat b{display:block;font-family:var(--serif);font-weight:600;font-size:26px;margin-top:8px}
 .stat i{display:block;color:var(--ink-3);font-size:12px;margin-top:4px;font-style:normal}
 .panels{display:grid;grid-template-columns:1.5fr 1fr;gap:14px;margin-top:14px}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px}
@@ -92,6 +89,9 @@ body{background:var(--paper)}
 .paylist .pr{display:flex;justify-content:space-between;font-size:13.3px}
 .paylist .track{height:6px;border-radius:99px;background:var(--stone);margin-top:5px;overflow:hidden}
 .paylist .track i{display:block;height:100%;background:var(--cocoa);border-radius:99px}
+@media(max-width:860px){.panels{grid-template-columns:1fr}}
+@media(max-width:760px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:420px){.stat-grid{grid-template-columns:1fr}.stat b{font-size:23px}}
 
 /* ---------- kanban ---------- */
 .ktools{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
@@ -116,7 +116,7 @@ body{background:var(--paper)}
 /* ---------- meja ---------- */
 .tgrid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:12px}
 .tcard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 14px;text-align:left}
-.tcard b{display:block;font-family:var(--serif);font-weight:400;font-size:22px}
+.tcard b{display:block;font-family:var(--serif);font-weight:600;font-size:22px}
 .tcard span{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:11.5px;font-weight:600;color:var(--sage)}
 .tcard span i{width:6px;height:6px;border-radius:50%;background:currentColor}
 .tcard.busy span{color:var(--amber)}
@@ -157,6 +157,17 @@ body{background:var(--paper)}
 .numw{width:78px}
 .keybox{margin-top:8px;display:flex;align-items:center;gap:8px}
 @media(max-width:640px){.setgrid{grid-template-columns:1fr}}
+
+/* ---------- cetak QR meja ---------- */
+@media print{
+  #print-root{padding:60px 40px;text-align:center}
+  #print-root,#print-root *{color:#000!important;background:#fff!important}
+  #print-root .pname{font-size:15px;letter-spacing:.24em;text-transform:uppercase;font-weight:700}
+  #print-root .pnum{font-family:var(--serif);font-weight:700;font-size:110px;line-height:1;margin:14px 0 26px}
+  #print-root .pqr{width:280px;margin:0 auto;border:1px solid #ccc!important;border-radius:16px;padding:16px}
+  #print-root .pqr svg{width:100%;height:auto}
+  #print-root .pnote{margin-top:26px;font-size:13.5px}
+}
 </style>
 </head>
 <body>
@@ -167,6 +178,7 @@ body{background:var(--paper)}
 </div>
 <div id="root"></div>
 <div id="sheet-root"></div>
+<div id="print-root" aria-hidden="true"></div>
 
 <script src="qrcode.js"></script>
 <script src="sakuta-core.js"></script>
@@ -256,7 +268,7 @@ body{background:var(--paper)}
       '<nav id="nav">' + r.nav.map(function (k) { return navBtn(k); }).join('') + '</nav>' +
       '<div class="divider"></div>' +
       '<div class="who"><span class="av">' + (staff ? staff[0].toUpperCase() : r.label[0]) + '</span><div><b>' + esc(staff || r.label) + '</b><span>' + r.label + '</span></div></div>' +
-      '<div class="foot"><button class="btn btn-quiet btn-sm" style="flex:1" id="lg1">' + ic('logout', 'sm') + 'Keluar</button><button class="icon-btn" data-theme-toggle title="Mode terang atau gelap"></button></div>' +
+      '<div class="foot"><button class="btn btn-quiet btn-sm btn-block" id="lg1">' + ic('logout', 'sm') + 'Keluar</button></div>' +
       '</aside>' +
       '<div class="main"><header class="topbar"><h1 id="vtitle"></h1><span class="sp"></span>' + S.themeBtn() + '<button class="icon-btn" id="lg2" title="Keluar">' + ic('logout') + '</button></header>' +
       '<div class="view" id="view"></div></div>' +
@@ -283,9 +295,10 @@ body{background:var(--paper)}
     $$('#mnav [data-r]').forEach(function (b) { b.classList.toggle('on', b.dataset.r === route); });
     var n = activeCount();
     ['badge-nav', 'badge-mob'].forEach(function (id) { var el = document.getElementById(id); if (el) { el.textContent = n; el.style.display = n ? 'grid' : 'none'; } });
-    var was = document.getElementById('view').scrollTop;
+    var keepScroll = live ? window.scrollY : 0;
     var fn = { ringkasan: drawDashboard, pesanan: drawKanban, meja: drawTables, menu: drawMenuAdmin, webhook: drawWebhook, pengaturan: drawSettings }[route];
     if (fn) fn(live);
+    if (live) window.scrollTo(0, keepScroll);
   }
 
   /* ================= RINGKASAN ================= */
@@ -360,7 +373,7 @@ body{background:var(--paper)}
     var sh = openSheet(
       '<div class="grab"></div><div class="sheet-head"><h3>' + o.code + '</h3><button class="icon-btn" data-close>' + ic('x') + '</button></div>' +
       '<div class="sheet-body"><div class="row" style="gap:8px;flex-wrap:wrap"><span class="badge ' + (st ? st.k : '') + '"><i></i>' + (st ? st.t : o.status) + '</span><span class="badge">' + ic('table', 'sm') + 'Meja ' + o.table + '</span>' + (o.name ? '<span class="badge">' + ic('user', 'sm') + esc(o.name) + '</span>' : '') + '</div>' +
-      '<h2 style="font-family:var(--serif);font-weight:400;font-size:17px;margin-top:16px">Rincian pesanan</h2>' + lines +
+      '<h2 style="font-family:var(--serif);font-weight:600;font-size:17px;margin-top:16px">Rincian pesanan</h2>' + lines +
       '<div class="sum num"><div><span>Subtotal</span><span>' + rp(o.sub) + '</span></div><div><span>Service</span><span>' + rp(o.service) + '</span></div><div><span>Pajak</span><span>' + rp(o.tax) + '</span></div><div class="t"><span>Total</span><span>' + rp(o.total) + '</span></div></div>' +
       (o.method ? '<p class="muted" style="margin-top:10px;font-size:13px">Dibayar via ' + (S.METHOD[o.method] || o.method) + (o.paidAt ? ' &middot; ' + S.timeStr(o.paidAt) : '') + '</p>' : '') +
       '</div><div class="sheet-foot" style="display:grid;gap:10px">' + actions + '</div>', { mid: true });
@@ -390,7 +403,13 @@ body{background:var(--paper)}
       '<div class="sheet-body center"><div class="qrbox" style="margin-left:auto;margin-right:auto">' + S.qrSvg(url, { label: 'QR Meja ' + n }) + '</div>' +
       '<p class="muted num" style="margin-top:10px;font-size:12.5px;word-break:break-all">' + esc(url) + '</p></div>' +
       '<div class="sheet-foot" style="display:grid;gap:10px;grid-template-columns:1fr 1fr"><button class="btn btn-line" id="pr">' + ic('print', 'sm') + 'Cetak</button><a class="btn btn-primary" href="' + url + '" target="_blank" rel="noopener">' + ic('external', 'sm') + 'Buka menu</a></div>', { mid: true });
-    $('#pr', sh.sheet).onclick = function () { window.print(); };
+    $('#pr', sh.sheet).onclick = function () {
+      document.getElementById('print-root').innerHTML =
+        '<div class="pname">Sakuta Coffee</div><div class="pnum">Meja ' + n + '</div>' +
+        '<div class="pqr">' + S.qrSvg(url, { label: 'QR Meja ' + n }) + '</div>' +
+        '<p class="pnote">Pindai untuk memesan dan membayar langsung dari mejamu.</p>';
+      window.print();
+    };
   }
 
   /* ================= MENU ADMIN ================= */

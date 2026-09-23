@@ -6,9 +6,6 @@
 <meta name="theme-color" content="#F6F5F3">
 <script>(function(){try{var t=localStorage.getItem("sk_theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}})()</script>
 <title>Sakuta | Pesan dari meja</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Young+Serif&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="sakuta.css">
 <style>
 body{background:var(--paper)}
@@ -18,18 +15,24 @@ body{background:var(--paper)}
 .demo-bar{display:flex;align-items:center;gap:8px;padding:8px 18px;background:var(--oat);color:var(--cocoa-2);font-size:12.5px;line-height:1.35}
 .demo-bar .ic{flex:none}
 .demo-bar a{margin-left:auto;font-weight:600;white-space:nowrap;color:var(--cocoa-2)}
-.embed .demo-bar a{display:none}
+.embed .demo-bar{display:none}
 
 .top{position:sticky;top:0;z-index:20;height:60px;padding:0 14px 0 18px;display:flex;align-items:center;justify-content:space-between;background:color-mix(in srgb,var(--paper) 94%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .top-r{display:flex;align-items:center;gap:8px}
-.pill{display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 13px;border-radius:99px;background:var(--card);border:1px solid var(--line);font-size:13.5px;font-weight:600;transition:border-color .15s}
+.pill{display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 13px;border-radius:99px;background:var(--card);border:1px solid var(--line);font-size:13.5px;font-weight:600;transition:border-color .15s;white-space:nowrap;flex:none}
 .pill:hover{border-color:var(--latte)}
-.pill i{width:8px;height:8px;border-radius:50%;background:var(--sage)}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--sage);flex:none}
 .pill.warn i{background:#C69A45}
 .pill.wait i{background:var(--cocoa)}
+@media(max-width:480px){
+  .top{padding:0 10px 0 14px}
+  .top-r{gap:6px}
+  .pill{padding:0 10px;gap:6px}
+  .pill .lbl{display:none}
+}
 
 .hero{padding:14px 18px 6px}
-.hero h1{font-family:var(--serif);font-weight:400;font-size:30px;line-height:1.14;letter-spacing:-.01em}
+.hero h1{font-family:var(--serif);font-weight:600;font-size:30px;line-height:1.14;letter-spacing:-.01em}
 .hero p{margin-top:8px;color:var(--ink-2);max-width:34ch}
 .search{display:flex;align-items:center;gap:10px;margin:16px 18px 0;height:46px;padding:0 14px;border-radius:14px;background:var(--card);border:1px solid var(--line);color:var(--ink-3)}
 .search:focus-within{border-color:var(--latte);box-shadow:0 0 0 4px rgba(194,166,146,.22)}
@@ -41,7 +44,7 @@ body{background:var(--paper)}
 .cat.on{background:var(--ink);color:var(--paper)}
 
 #list{padding:0 18px}
-.sec{font-family:var(--serif);font-weight:400;font-size:20px;margin:18px 0 2px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.sec{font-family:var(--serif);font-weight:600;font-size:20px;margin:18px 0 2px;padding-bottom:8px;border-bottom:1px solid var(--line)}
 .item{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line-2);cursor:pointer}
 .item .tile{width:64px;height:64px}
 .item .tile .ic{width:28px;height:28px}
@@ -50,7 +53,6 @@ body{background:var(--paper)}
 .item .price{font-weight:600;font-size:14px;margin-top:6px;display:flex;gap:6px 14px;flex-wrap:wrap}
 .item .price span+span{color:var(--ink-2);font-weight:500}
 .item .price small{font-weight:500;color:var(--ink-3);font-size:12.5px;margin-right:4px}
-.tag{font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--oat);color:var(--cocoa-2)}
 .add{min-width:38px;height:38px;padding:0 10px;border-radius:99px;background:var(--cocoa);color:var(--on-cocoa);display:grid;place-items:center;font-weight:700;font-variant-numeric:tabular-nums;transition:background .15s}
 .add:hover{background:var(--cocoa-2)}
 .item.off{cursor:default}
@@ -72,6 +74,10 @@ body{background:var(--paper)}
 .choice em{font-style:normal;color:inherit;opacity:.7;font-size:12.5px}
 .sheet .field{margin-top:18px}
 .cline{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:14px 0;border-bottom:1px solid var(--line-2)}
+.cline.cline-cart{grid-template-columns:1fr auto;grid-template-areas:"info price" "step step";align-items:start}
+.cline.cline-cart>div:first-child{grid-area:info}
+.cline.cline-cart>.pr{grid-area:price}
+.cline.cline-cart>.stepper{grid-area:step;justify-self:start;margin-top:8px}
 .cline b{font-weight:600}
 .cline small{display:block;color:var(--ink-2);font-size:12.5px;line-height:1.35}
 .cline .pr{font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
@@ -87,7 +93,7 @@ body{background:var(--paper)}
 .pay-opt:has(input:checked){border-color:var(--cocoa);background:var(--tint);box-shadow:0 0 0 1px var(--cocoa) inset}
 .pay-opt:has(input:focus-visible){outline:2px solid var(--cocoa);outline-offset:2px}
 .tgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
-.tgrid button{height:56px;border-radius:16px;border:1px solid var(--line);background:var(--card);font-family:var(--serif);font-size:21px;transition:.15s}
+.tgrid button{height:56px;border-radius:16px;border:1px solid var(--line);background:var(--card);font-family:var(--serif);font-weight:600;font-size:21px;transition:.15s}
 .tgrid button:hover{border-color:var(--cocoa);background:var(--oat)}
 .tgrid button.on{background:var(--cocoa);border-color:var(--cocoa);color:var(--on-cocoa)}
 
@@ -95,11 +101,11 @@ body{background:var(--paper)}
 .snap{max-width:440px}
 .snap-head{display:flex;justify-content:space-between;align-items:center;padding:14px 14px 0 20px}
 .snap-brand{display:flex;gap:10px;align-items:center}
-.snap-brand b{font-family:var(--serif);font-weight:400;font-size:19px;display:block;line-height:1.1}
+.snap-brand b{font-family:var(--serif);font-weight:600;font-size:19px;display:block;line-height:1.1}
 .snap-brand small{display:block;color:var(--ink-3);font-size:12px;line-height:1.2}
 .snap-amt{padding:12px 20px 16px;border-bottom:1px solid var(--line-2)}
 .snap-amt>span{font-size:13px;color:var(--ink-2)}
-.snap-amt>b{display:block;font-family:var(--serif);font-weight:400;font-size:32px;line-height:1.15;margin:2px 0 9px}
+.snap-amt>b{display:block;font-family:var(--serif);font-weight:600;font-size:32px;line-height:1.15;margin:2px 0 9px}
 .snap-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--ink-2)}
 .snap-body{padding:16px 20px 24px}
 .snap-body h4{font-size:14px;font-weight:600}
@@ -128,7 +134,7 @@ body{background:var(--paper)}
 .cardf{display:grid;gap:12px;margin-top:12px}
 .cardf .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .state{padding:46px 20px 50px;text-align:center;display:grid;justify-items:center;gap:10px}
-.state h4{font-family:var(--serif);font-weight:400;font-size:22px}
+.state h4{font-family:var(--serif);font-weight:600;font-size:22px}
 .state p{color:var(--ink-2);max-width:30ch;font-size:14px}
 .okc{width:64px;height:64px;border-radius:50%;background:var(--sage-t);color:var(--sage);display:grid;place-items:center;animation:pop .35s ease-out}
 .okc .ic{width:30px;height:30px;stroke-width:2}
@@ -136,10 +142,10 @@ body{background:var(--paper)}
 
 /* Halaman status pesanan */
 .ohero{margin:8px 18px 0;padding:22px 20px;border-radius:24px;background:var(--card);border:1px solid var(--line)}
-.ohero h1{font-family:var(--serif);font-weight:400;font-size:28px;line-height:1.15;letter-spacing:-.01em}
+.ohero h1{font-family:var(--serif);font-weight:600;font-size:28px;line-height:1.15;letter-spacing:-.01em}
 .ohero .lead{color:var(--ink-2);margin-top:8px}
 .omet{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
-.bigcode{margin-top:16px;padding:14px;border-radius:16px;background:var(--paper);text-align:center;font-family:var(--serif);font-size:30px;letter-spacing:.02em}
+.bigcode{margin-top:16px;padding:14px;border-radius:16px;background:var(--paper);text-align:center;font-family:var(--serif);font-weight:600;font-size:30px;letter-spacing:.02em}
 .tl{margin-top:22px;display:grid}
 .tl li{display:grid;grid-template-columns:28px 1fr auto;gap:12px;position:relative;padding-bottom:20px}
 .tl li:last-child{padding-bottom:0}
@@ -158,7 +164,7 @@ body{background:var(--paper)}
 .tl time{font-size:13px;color:var(--ink-2);padding-top:4px;font-variant-numeric:tabular-nums}
 .actions{display:grid;gap:10px;margin-top:20px}
 .card{margin:14px 18px 0;padding:18px 20px;border-radius:22px;background:var(--card);border:1px solid var(--line)}
-.card h2{font-family:var(--serif);font-weight:400;font-size:18px;margin-bottom:4px}
+.card h2{font-family:var(--serif);font-weight:600;font-size:18px;margin-bottom:4px}
 .rate{display:flex;gap:6px;margin-top:14px}
 .rate button{color:var(--line);transition:color .15s,transform .1s}
 .rate button.on,.rate button:hover{color:#C9A15A}
@@ -246,11 +252,11 @@ body{background:var(--paper)}
     let mine = '';
     if (o) {
       const k = o.status === 'pending' ? 'warn' : (o.status === 'delivered' || o.status === 'cancelled' || o.status === 'expired') ? '' : 'wait';
-      mine = '<a class="pill ' + k + '" href="#/order/' + o.token + '"><i></i>Pesananku</a>';
+      mine = '<a class="pill ' + k + '" href="#/order/' + o.token + '" aria-label="Pesananku"><i></i><span class="lbl">Pesananku</span></a>';
     }
     $('#top').innerHTML =
       '<span class="logo">' + S.logoMark() + '<span>sakuta</span></span>' +
-      '<div class="top-r">' + mine + '<button class="pill" id="tbtn" aria-label="Ganti nomor meja">' + ic('table', 'sm') + (table ? 'Meja ' + table : 'Pilih meja') + '</button>' + S.themeBtn() + '</div>';
+      '<div class="top-r">' + mine + '<button class="pill" id="tbtn" aria-label="Ganti nomor meja">' + ic('table', 'sm') + '<span class="lbl">' + (table ? 'Meja ' + table : 'Pilih meja') + '</span></button>' + S.themeBtn() + '</div>';
   }
 
   /* ---------- halaman menu ---------- */
@@ -358,8 +364,8 @@ body{background:var(--paper)}
         '<div class="grab"></div><div class="sheet-head"><h3>Pesananmu</h3><button class="icon-btn" data-close aria-label="Tutup">' + ic('x') + '</button></div>' +
         '<div class="sheet-body">' +
         '<div class="row sb"><span class="badge b-cocoa">' + ic('table', 'sm') + (table ? 'Meja ' + table : 'Belum pilih meja') + '</span><button class="linkbtn" data-tbl>' + (table ? 'Ganti meja' : 'Pilih meja') + '</button></div>' +
-        ls.map((l, i) => '<div class="cline"><div><b>' + esc(l.name) + '</b>' + (l.off ? '<small class="warn">Menu ini sudah habis. Hapus dari pesanan.</small>' : '') + (l.labels.length ? '<small>' + esc(l.labels.join(', ')) + '</small>' : '') + (l.note ? '<small>Catatan: ' + esc(l.note) + '</small>' : '') + '</div><div class="pr">' + rp(l.unit * l.qty) + '</div>' +
-          '<div class="stepper" style="justify-self:start"><button data-dec="' + i + '" aria-label="Kurangi">' + ic('minus', 'sm') + '</button><b>' + l.qty + '</b><button data-inc="' + i + '" aria-label="Tambah">' + ic('plus', 'sm') + '</button></div><span></span></div>').join('') +
+        ls.map((l, i) => '<div class="cline cline-cart"><div><b>' + esc(l.name) + '</b>' + (l.off ? '<small class="warn">Menu ini sudah habis. Hapus dari pesanan.</small>' : '') + (l.labels.length ? '<small>' + esc(l.labels.join(', ')) + '</small>' : '') + (l.note ? '<small>Catatan: ' + esc(l.note) + '</small>' : '') + '</div><div class="pr">' + rp(l.unit * l.qty) + '</div>' +
+          '<div class="stepper"><button data-dec="' + i + '" aria-label="Kurangi">' + ic('minus', 'sm') + '</button><b>' + l.qty + '</b><button data-inc="' + i + '" aria-label="Tambah">' + ic('plus', 'sm') + '</button></div></div>').join('') +
         '<label class="field"><span>Nama pemesan (boleh dikosongkan)</span><input class="input" id="cname" maxlength="30" placeholder="Supaya barista mudah memanggil" value="' + esc(custName) + '"></label>' +
         '<div class="field"><span>Cara bayar</span>' +
         '<label class="pay-opt"><input type="radio" name="pm" value="online"' + (payMode === 'online' ? ' checked' : '') + '><span class="mi">' + ic('wallet') + '</span><span><b>Bayar online</b><small>QRIS, e-wallet, virtual account, atau kartu lewat Midtrans. Kasir langsung tahu saat lunas.</small></span></label>' +
@@ -538,7 +544,7 @@ body{background:var(--paper)}
   S.on(() => {
     drawTop();
     const m = location.hash.match(/^#\/order\/(\w+)/);
-    if (m) renderOrderLive(m[1]); else { drawList(); drawCartbar(); }
+    if (m) renderOrderLive(m[1]); else { const y = window.scrollY; drawList(); drawCartbar(); window.scrollTo(0, y); }
   });
   function renderOrderLive(tok) { const y = window.scrollY; renderOrder(tok, { live: true }); window.scrollTo(0, y); }
   setInterval(S.sweep, 8000);

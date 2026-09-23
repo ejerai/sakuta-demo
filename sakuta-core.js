@@ -203,7 +203,8 @@
     const g = (m.opts || []).find(x => x.t);
     if (!g) return [{ l: '', v: m.price }];
     const vals = g.c.map(c => ({ l: c.l, v: m.price + (c.p || 0) }));
-    if (vals.length > 1 && vals.every(x => x.v === vals[0].v)) return [{ l: '', v: vals[0].v }];
+    /* Hanya satu varian harga (mis. cuma Ice) atau semua varian harganya sama: sembunyikan label Hot/Ice. */
+    if (vals.every(x => x.v === vals[0].v)) return [{ l: '', v: vals[0].v }];
     return vals;
   }
 
